@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('absences', function (Blueprint $table) {
+        Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->string('motive');
+            $table->date('date');
+            $table->time('arrival_time');
+            $table->time('departure_time');
+            $table->string('day_week');
 
             $table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');
 
             $table->timestamps();
-
 
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('absences');
+        Schema::dropIfExists('schedules');
     }
 };

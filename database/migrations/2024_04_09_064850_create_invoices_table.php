@@ -19,8 +19,11 @@ return new class extends Migration
             $table->integer('invoice_irpf');
             $table->integer('total');
 
-            $table->foreignId('company_id')->constrained('company')->onDelete('cascade');
-            $table->foreignId('client_id')->constrained('client')->onDelete('cascade');
+
+            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
+            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
+
+            $table->timestamps();
 
         });
     }

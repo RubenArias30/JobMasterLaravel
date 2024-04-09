@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedule', function (Blueprint $table) {
+        Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->time('arrival_time');
-            $table->time('departure_time');
-            $table->string('day_week');
-
-            $table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');
+            $table->string('street');
+            $table->integer('number');
+            $table->string('city');
+            $table->integer('postal_code');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedule');
+        Schema::dropIfExists('addresses');
     }
 };

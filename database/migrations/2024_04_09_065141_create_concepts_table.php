@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('concept', function (Blueprint $table) {
+        Schema::create('concepts', function (Blueprint $table) {
             $table->id();
             $table->string('concept');
             $table->integer('price');
@@ -21,6 +21,8 @@ return new class extends Migration
             $table->integer('concept_irpf');
 
             $table->foreignId('invoices_id')->constrained('invoices')->onDelete('cascade');
+
+            $table->timestamps();
         });
     }
 
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('concept');
+        Schema::dropIfExists('concepts');
     }
 };

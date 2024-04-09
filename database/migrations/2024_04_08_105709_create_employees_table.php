@@ -18,14 +18,15 @@ return new class extends Migration
             $table->string('email');
             $table->date('date_of_birth');
             $table->enum('gender', ['male', 'female']);
-            $table->integer('telephone');
+            $table->string('telephone');
             $table->string('country');
             $table->string('photo')->nullable();
 
-
             $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('address_id')->constrained('address')->onDelete('cascade');
-            $table->foreignId('company_id')->constrained('company')->onDelete('cascade');
+            $table->foreignId('address_id')->constrained('addresses')->onDelete('cascade');
+            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
+
+            $table->timestamps();
 
         });
     }
