@@ -17,13 +17,6 @@ return new class extends Migration
             $table->integer('number');
             $table->string('city');
             $table->integer('postal_code');
-
-            //$table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');
-
-
-
-
-
         });
     }
 
