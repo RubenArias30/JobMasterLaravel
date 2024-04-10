@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\EmployeeController;
 
 use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
@@ -22,3 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout']);
+
+Route::get('/employees', [EmployeeController::class, 'index']);
+Route::post('/employees', [EmployeeController::class, 'store']);
