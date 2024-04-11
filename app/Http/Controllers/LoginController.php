@@ -24,10 +24,18 @@ class LoginController extends Controller
     {
         $credentials = request(['nif', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        try {
+            // Autenticar al usuario
+            if (! $token = auth()->attempt($credentials)) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not create token'], 500);
         }
 
+
+
+        // Responder con el token y el rol
         return $this->respondWithToken($token);
     }
 
@@ -71,10 +79,13 @@ class LoginController extends Controller
      */
     protected function respondWithToken($token)
     {
+        // Obtener el usuario autenticado
+    $user = auth()->user();
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'roles' => $user->roles,
         ]);
     }
 }
