@@ -28,18 +28,35 @@ class EmployeeController extends Controller
         // $employees = Employees::create($request->all());
 
         // Create a new employee record
-        $employee = new Employee();
-        $employee->name = $validatedData['name'];
-        $employee->surname = $validatedData['surname'];
-        $employee->email = $validatedData['email'];
-        $employee->date_of_birth = $validatedData['date_of_birth'];
-        $employee->telephone = $validatedData['telephone'];
-        $employee->country = $validatedData['country'];
+        $employee = new Employees();
+        $employee->name = $request['name'];
+        $employee->surname = $request['surname'];
+        $employee->email = $request['email'];
+        $employee->date_of_birth = $request['date_of_birth'];
+        $employee->telephone = $request['telephone'];
+        $employee->country = $request['country'];
 
         $employee->save();
 
 
         return response()->json($employees, 201);
+    }
+
+    // Método para eliminar un empleado
+    public function delete($id)
+    {
+        // Buscar al empleado por su ID
+        $employee = Employees::find($id);
+
+        // Verificar si el empleado existe
+        if (!$employee) {
+            return response()->json(['message' => 'Empleado no encontrado'], 404);
+        }
+
+        // Eliminar al empleado
+        $employee->delete();
+
+        return response()->json(['message' => 'Empleado eliminado exitosamente']);
     }
 }
 
