@@ -3,32 +3,78 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class LoginController extends Controller
 {
-    public function login(Request $request)
+    /**
+     * Constructor.
+     */
+    public function __construct()
     {
-        $credentials = $request->only('nif', 'password');
-
-        if (Auth::attempt($credentials)) {
-            // Authentication passed...
-            return response()->json(['message' => 'Successfully logged in'], 200);
-        } else {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
+        // Aplicar middleware de autenticación JWT a todas las rutas excepto 'login'
+        $this->middleware('auth:api', ['except' => ['login']]);
     }
 
     /**
-     * Log the user out of the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Inicia sesión y devuelve el token JWT.
      */
-    public function logout(Request $request)
+    public function login()
     {
-        Auth::logout();
+        $credentials = request(['nif', 'password']);
 
-        return response()->json(['message' => 'Successfully logged out'], 200);
+        if (! $token = auth()->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        return $this->respondWithToken($token);
+    }
+
+    /**
+     * Devuelve la información del usuario autenticado.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        return response()->json(auth()->user());
+    }
+
+    /**
+     * Cierra la sesión del usuario (invalida el token JWT).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        auth()->logout();
+
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+
+    /**
+     * Refresca el token JWT.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        return $this->respondWithToken(JWTAuth::refresh());
+    }
+
+    /**
+     * Construye la respuesta con el token JWT.
+     *
+     * @param  string  $token
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => JWTAuth::factory()->getTTL() * 60
+        ]);
     }
 }
