@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\EmployeeController;
 
 use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
@@ -24,3 +25,7 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/me', [LoginController::class, 'me']);
 Route::post('/refresh', [LoginController::class, 'refresh']);
 // Route::post('logout', [LoginController::class, 'logout'])->middleware('jwt.auth');
+Route::post('/logout', [LoginController::class, 'logout']);
+
+Route::get('/employees', [EmployeeController::class, 'index']);
+Route::post('/employees', [EmployeeController::class, 'store']);
