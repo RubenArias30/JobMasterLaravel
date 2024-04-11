@@ -29,3 +29,4 @@ Route::post('/logout', [LoginController::class, 'logout']);
 
 Route::get('/employees', [EmployeeController::class, 'index']);
 Route::post('/employees', [EmployeeController::class, 'store']);
+Route::delete('/employees/{id}', [EmployeeController::class, 'delete']);
