@@ -16,7 +16,7 @@ use App\Models\Incidents;
 use App\Models\Invoices;
 use App\Models\Schedule;
 use Illuminate\Database\Seeder;
-use App\Models\Users;
+use App\Models\User;
 use League\CommonMark\Node\Block\Document;
 
 class DatabaseSeeder extends Seeder
@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Users::factory(10)->create();
+        User::factory(10)->create();
         Address::factory(10)->create();
         Company::factory(10)->create();
         Client::factory(10)->create();

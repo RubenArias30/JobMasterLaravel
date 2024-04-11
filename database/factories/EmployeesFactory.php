@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Address;
 use App\Models\Company;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -28,7 +28,7 @@ class EmployeesFactory extends Factory
             'telephone' => $this->faker->phoneNumber,
             'country' => $this->faker->country,
             'photo' => $this->faker->imageUrl(),
-            'users_id' => Users::inRandomOrder()->first()->id,
+            'users_id' => User::inRandomOrder()->first()->id,
             'address_id' => Address::inRandomOrder()->first()->id,
             'company_id' => Company::inRandomOrder()->first()->id,
         ];

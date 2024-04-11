@@ -39,7 +39,7 @@ class EmployeeController extends Controller
         $employee->save();
 
 
-        return response()->json($employees, 201);
+        return response()->json($employee, 201);
     }
 
     // Método para eliminar un empleado
