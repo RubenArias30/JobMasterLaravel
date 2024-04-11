@@ -15,7 +15,7 @@ class User  extends Authenticatable implements JWTSubject
 
     protected $fillable = ['nif', 'password', 'roles'];
 
-    public function employees()
+    public function employee()
     {
         return $this->hasOne(Employees::class);
     }

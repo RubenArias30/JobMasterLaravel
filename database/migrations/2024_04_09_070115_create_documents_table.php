@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->enum('type_documents',['contracts','nif','curriculum','laboral_life','payroll','proof']);
-            $table->string('name');
-            $table->string('description');
-            $table->date('date');
-            $table->string('route');
+            $table->enum('type_documents',['contracts','nif','curriculum','laboral_life','payroll','proof'])->nullable();
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
+            $table->date('date')->nullable();
+            $table->string('route')->nullable();
 
             $table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');
 

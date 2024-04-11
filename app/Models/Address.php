@@ -10,4 +10,9 @@ class Address extends Model
     use HasFactory;
 
     protected $fillable = ['street', 'number', 'city', 'postal_code'];
+
+    public function employee()
+{
+    return $this->hasOne(Employees::class);
+}
 }

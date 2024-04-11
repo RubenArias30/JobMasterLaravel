@@ -15,4 +15,14 @@ class Incidents extends Model
     {
         return $this->belongsTo(Employees::class, 'employees_id');
     }
+
+    public function address()
+    {
+        return $this->hasOne(Address::class)->withDefault();
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class)->withDefault();
+    }
 }

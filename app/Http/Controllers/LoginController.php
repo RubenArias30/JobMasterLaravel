@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employees;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -46,7 +47,15 @@ class LoginController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+     $user = auth()->user();
+    $employee = Employees::where('users_id', $user->id)->first();
+    // Comprueba si se encontró un registro de empleado para el usuario autenticado
+    if ($employee) {
+        return response()->json(['name' => $employee->name]);
+    } else {
+        // Si no se encuentra un registro de empleado, devuelve el nif del usuario como nombre de usuario
+        return response()->json(['name' => $user->nif]);
+    }
     }
 
     /**
