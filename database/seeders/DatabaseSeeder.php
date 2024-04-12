@@ -27,33 +27,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        // // Crea un nuevo registro en la tabla addresses para el administrador
-        // $address = Address::create([
-        //     'street' => 'Admin Street',
-        //     'city' => 'Admin City',
-        //     'country' => 'Admin Country',
-        // ]);
-
-        // Crea el usuario administrador
-        $user = User::create([
+        User::create([
             'nif' => 'admin',
             'password' => bcrypt('admin'),
             'roles' => 'admin',
         ]);
 
-        // // Crea el registro de empleado asociado al usuario administrador
-        // $employee = Employees::create([
-        //     'name' => 'Admin',
-        //     'surname' => 'Admin',
-        //     'email' => 'admin@example.com',
-        //     'date_of_birth' => '2000-01-01',
-        //     'gender' => 'male',
-        //     'telephone' => '123456789',
-        //     'country' => 'Admin Country',
-        //     'users_id' => $user->id,
-        //     'address_id' => $address->id,
-        //     'company_id' => 1,
-        // ]);
+
 
 
 

@@ -19,7 +19,7 @@ class UserFactory extends Factory
         return [
             'nif' => $this->faker->unique()->regexify('[0-9]{8}[A-Z]{1}'),
             'password' => bcrypt('password123'),
-            'roles' => 'empleado',
+            'roles' => $this->faker->randomElement(['admin', 'empleado']),
         ];
     }
 }
