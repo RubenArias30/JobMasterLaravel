@@ -20,4 +20,9 @@ class Invoices extends Model
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
+
+    public function concepts()
+    {
+        return $this->hasMany(Concept::class);
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\InvoiceController;
 
 use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
@@ -30,3 +31,6 @@ Route::post('/logout', [LoginController::class, 'logout']);
 Route::get('/employees', [EmployeeController::class, 'index']);
 Route::post('/employees', [EmployeeController::class, 'store']);
 Route::delete('/employees/{id}', [EmployeeController::class, 'delete']);
+
+
+Route::get('/budget', [InvoiceController::class, 'index']);
