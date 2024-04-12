@@ -34,12 +34,12 @@ class DatabaseSeeder extends Seeder
         //     'country' => 'Admin Country',
         // ]);
 
-        // // Crea el usuario administrador
-        // $user = User::create([
-        //     'nif' => 'admin',
-        //     'password' => bcrypt('admin'),
-        //     'roles' => 'admin',
-        // ]);
+        // Crea el usuario administrador
+        $user = User::create([
+            'nif' => 'admin',
+            'password' => bcrypt('admin'),
+            'roles' => 'admin',
+        ]);
 
         // // Crea el registro de empleado asociado al usuario administrador
         // $employee = Employees::create([
