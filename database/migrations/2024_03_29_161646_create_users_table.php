@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nif')->unique();
             $table->string('password');
-            $table->enum('roles', ['admin', 'empleado']);
+            $table->enum('roles', ['admin', 'empleado'])->default('empleado');
             $table->timestamps();
         });
         }

@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -29,22 +30,21 @@ return new class extends Migration {
                 ->on('users')
                 ->onDelete('cascade');
 
-                $table->foreign('address_id')
+            $table->foreign('address_id')
                 ->references('id')
                 ->on('addresses')
                 ->onDelete('cascade');
 
-                $table->foreign('company_id')
+            $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
                 ->onDelete('cascade');
 
-        //     $table->foreignId('users_id')->nullable()->constrained('users')->onDelete('cascade');
-        //     $table->foreignId('address_id')->nullable()->constrained('addresses')->onDelete('cascade');
-        //    $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('cascade');
+            //     $table->foreignId('users_id')->nullable()->constrained('users')->onDelete('cascade');
+            //     $table->foreignId('address_id')->nullable()->constrained('addresses')->onDelete('cascade');
+            //    $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('cascade');
 
             $table->timestamps();
-
         });
     }
 

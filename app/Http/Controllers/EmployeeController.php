@@ -63,7 +63,7 @@ class EmployeeController extends Controller
         $credentials = new User();
         $credentials->nif = $request['nif'];
         $credentials->password = bcrypt($request->input('password'));
-        $credentials->roles = 'empleado'; // Asignar el rol de empleado
+        $credentials->roles = 'empleado';
         $credentials->save();
 
         // Relacionar las credenciales con el empleado
