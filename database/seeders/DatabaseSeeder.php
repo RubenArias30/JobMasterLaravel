@@ -27,11 +27,39 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        User::create([
+        $company = Company::inRandomOrder()->first();
+        $companyId = $company ? $company->id : null;
+
+        // Crea un usuario administrador
+        $admin = User::factory()->create([
             'nif' => 'admin',
             'password' => bcrypt('admin'),
             'roles' => 'admin',
         ]);
+
+        // Crea una dirección para el usuario administrador
+        $address = Address::factory()->create([
+            'street' => 'Admin Street',
+            'number' => '0',
+            'city' => 'Admin City',
+            'postal_code' => '08904',
+        ]);
+
+        // Crea un empleado asociado al usuario administrador
+        $employee = Employees::factory()->create([
+            'name' => 'Admin',
+            'surname' => 'Admin',
+            'email' => 'admin@example.com',
+            'date_of_birth' => '2000-01-01',
+            'gender' => 'male',
+            'telephone' => '123456789',
+            'country' => 'Admin Country',
+            'users_id' => $admin->id,
+            'address_id' => $address->id,
+            'company_id' => $companyId,
+        ]);
+
+
 
 
 

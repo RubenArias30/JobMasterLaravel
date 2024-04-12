@@ -30,7 +30,7 @@ class EmployeesFactory extends Factory
             'photo' => $this->faker->imageUrl(),
             'users_id' => User::inRandomOrder()->first()->id,
             'address_id' => Address::inRandomOrder()->first()->id,
-            'company_id' => Company::inRandomOrder()->first()->id,
+            'company_id' => Company::exists() ? Company::inRandomOrder()->first()->id : null,
         ];
     }
 }
