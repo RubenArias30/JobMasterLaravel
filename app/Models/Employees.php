@@ -11,12 +11,12 @@ class Employees extends Model
 
     protected $fillable = ['name', 'surname', 'email', 'date_of_birth', 'gender', 'telephone', 'country', 'photo', 'users_id', 'address_id', 'company_id'];
 
-    public function user()
+    public function users()
     {
         return $this->belongsTo(User::class, 'users_id');
     }
 
-    public function address()
+    public function addresses()
     {
         return $this->belongsTo(Address::class, 'address_id');
     }

@@ -30,7 +30,6 @@ class EmployeeController extends Controller
             'gender' => 'required|in:masculino,femenino,otro',
             'telephone' => 'required',
             'street' => 'required',
-            'number' => 'required',
             'city' => 'required',
             'postal_code' => 'required',
             'nif' => 'required',
@@ -52,7 +51,6 @@ class EmployeeController extends Controller
         // Guardar los datos de dirección
         $address = new Address();
         $address->street = $request['street'];
-        $address->number = $request['number'];
         $address->city = $request['city'];
         $address->postal_code = $request['postal_code'];
         $address->save();
@@ -79,55 +77,48 @@ class EmployeeController extends Controller
     //Metodo actuaizar/editar empleado
     public function update(Request $request, $id)
     {
-     // Encuentra al empleado por su ID
-     $employee = Employees::findOrFail($id);
+        // Buscamos al empleado por su ID
+        $employee = Employees::find($id);
 
-     // Valida los datos recibidos en la solicitud
-    //  $request->validate([
-    //      'name' => 'required',
-    //      'surname' => 'required',
-    //      'email' => 'required|email',
-    //      'date_of_birth' => 'required|date',
-    //      'gender' => 'required|in:masculino,femenino,otro',
-    //      'telephone' => 'required',
-    //      'country' => 'required',
-    //      'photo' => 'required',
-    //      'street' => 'required',
-    //      'number' => 'required',
-    //      'city' => 'required',
-    //      'postal_code' => 'required',
-    //      'nif' => 'required',
-    //      'password' => 'required',
-    //  ]);
+        // Verificamos si el empleado existe
+        if (!$employee) {
+            return response()->json(['message' => 'Empleado no encontrado'], 404);
+        }
 
-     // Actualiza los datos del empleado
-     $employee->update([
-         'name' => $request->input('name'),
-         'surname' => $request->input('surname'),
-         'email' => $request->input('email'),
-         'date_of_birth' => $request->input('date_of_birth'),
-         'gender' => $request->input('gender'),
-         'telephone' => $request->input('telephone'),
-         'country' => $request->input('country'),
-         'photo' => $request->input('photo'),
-     ]);
+        // Actualizamos los datos del empleado
+        $employee->update($request->only([
+            'name',
+            'surname',
+            'email',
+            'date_of_birth',
+            'gender',
+            'telephone',
+            'country',
+            'photo',
+        ]));
 
-     // Actualiza los datos de la dirección
-     $employee->address->update([
-         'street' => $request->input('street'),
-         'number' => $request->input('number'),
-         'city' => $request->input('city'),
-         'postal_code' => $request->input('postal_code'),
-     ]);
+        // Actualizar los datos de dirección
+        if ($employee->addresses) {
+            $employee->addresses->update($request->only([
+                'street',
+                'city',
+                'postal_code',
+            ]));
+        }
 
-     // Actualiza los datos de las credenciales
-     $employee->user->update([
-         'nif' => $request->input('nif'),
-         'password' => bcrypt($request->input('password')),
-     ]);
+        // Actualizamos los datos de credenciales
+        if ($employee->users) {
+            $employee->users->update($request->only([
+                'nif',
+                'password',
+            ]));
+        }
 
-     return response()->json($employee, 200);
+        return response()->json($employee, 200);
     }
+
+
+
 
 
 
@@ -159,6 +150,18 @@ class EmployeeController extends Controller
 
         return response()->json(['message' => 'Empleado eliminado exitosamente']);
     }
+
+    public function show($id)
+{
+    $employee = Employees::with('addresses', 'users')->find($id);
+
+    if (!$employee) {
+        return response()->json(['message' => 'Empleado no encontrado'], 404);
+    }
+
+    return response()->json($employee);
+}
+
 
 }
 

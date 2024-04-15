@@ -40,7 +40,6 @@ class DatabaseSeeder extends Seeder
         // Crea una dirección para el usuario administrador
         $address = Address::factory()->create([
             'street' => 'Admin Street',
-            'number' => '0',
             'city' => 'Admin City',
             'postal_code' => '08904',
         ]);

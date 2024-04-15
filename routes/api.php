@@ -34,4 +34,5 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'delete']);
 
 
 Route::get('/budget', [InvoiceController::class, 'index']);
+Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);

@@ -13,6 +13,6 @@ class Address extends Model
 
     public function employee()
 {
-    return $this->hasOne(Employees::class);
+    return $this->belongsTo(Employees::class);
 }
 }
