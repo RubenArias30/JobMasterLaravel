@@ -76,6 +76,61 @@ class EmployeeController extends Controller
         return response()->json($employee, 201);
     }
 
+    //Metodo actuaizar/editar empleado
+    public function update(Request $request, $id)
+    {
+     // Encuentra al empleado por su ID
+     $employee = Employees::findOrFail($id);
+
+     // Valida los datos recibidos en la solicitud
+    //  $request->validate([
+    //      'name' => 'required',
+    //      'surname' => 'required',
+    //      'email' => 'required|email',
+    //      'date_of_birth' => 'required|date',
+    //      'gender' => 'required|in:masculino,femenino,otro',
+    //      'telephone' => 'required',
+    //      'country' => 'required',
+    //      'photo' => 'required',
+    //      'street' => 'required',
+    //      'number' => 'required',
+    //      'city' => 'required',
+    //      'postal_code' => 'required',
+    //      'nif' => 'required',
+    //      'password' => 'required',
+    //  ]);
+
+     // Actualiza los datos del empleado
+     $employee->update([
+         'name' => $request->input('name'),
+         'surname' => $request->input('surname'),
+         'email' => $request->input('email'),
+         'date_of_birth' => $request->input('date_of_birth'),
+         'gender' => $request->input('gender'),
+         'telephone' => $request->input('telephone'),
+         'country' => $request->input('country'),
+         'photo' => $request->input('photo'),
+     ]);
+
+     // Actualiza los datos de la dirección
+     $employee->address->update([
+         'street' => $request->input('street'),
+         'number' => $request->input('number'),
+         'city' => $request->input('city'),
+         'postal_code' => $request->input('postal_code'),
+     ]);
+
+     // Actualiza los datos de las credenciales
+     $employee->user->update([
+         'nif' => $request->input('nif'),
+         'password' => bcrypt($request->input('password')),
+     ]);
+
+     return response()->json($employee, 200);
+    }
+
+
+
     // Método para eliminar un empleado
     public function delete($id)
     {
