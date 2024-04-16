@@ -16,5 +16,22 @@ class InvoiceController extends Controller
 
         return response()->json($invoices);
     }
+
+    public function delete($id)
+    {
+
+        $invoice = Invoices::find($id);
+
+        // Verificar si la factura existe
+        if (!$invoice) {
+            return response()->json(['message' => 'Factura no encontrada'], 404);
+        }
+
+        // Finalmente, eliminar al empleado
+        $invoice->delete();
+
+        return response()->json(['message' => 'Factura eliminada exitosamente']);
+    }
+
 }
 

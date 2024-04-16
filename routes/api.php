@@ -33,6 +33,7 @@ Route::post('/employees', [EmployeeController::class, 'store']);
 Route::delete('/employees/{id}', [EmployeeController::class, 'delete']);
 
 
+Route::delete('/budget/{id}', [InvoiceController::class, 'delete']);
 Route::get('/budget', [InvoiceController::class, 'index']);
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
