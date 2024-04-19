@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('concept');
             $table->integer('price');
             $table->integer('quantity');
-            $table->integer('discount');
+            $table->integer('concept_discount');
             $table->integer('concept_iva');
             $table->integer('concept_irpf');
 

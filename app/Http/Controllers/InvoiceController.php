@@ -24,10 +24,14 @@ class InvoiceController extends Controller
     {
         // Validar los datos
         $request->validate([
-            'name' => 'required',
-            'telephone' => 'required',
-            'nif' => 'required',
-            'email' => 'required|email',
+            'client_name' => 'required',
+            'client_telephone' => 'required',
+            'client_nif' => 'required',
+            'client_email' => 'required|email',
+            'company_name' => 'required',
+            'company_telephone' => 'required',
+            'company_nif' => 'required',
+            'company_email' => 'required|email',
             'street' => 'required',
             'city' => 'required',
             'postal_code' => 'required',
@@ -42,19 +46,19 @@ class InvoiceController extends Controller
 
         // Compañia
         $company = new Company();
-        $company->name = $request->input('name');
-        $company->telephone = $request->input('telephone');
-        $company->nif = $request->input('nif');
-        $company->email = $request->input('email');
+        $company->company_name = $request->input('company_name');
+        $company->company_telephone = $request->input('company_telephone');
+        $company->company_nif = $request->input('company_nif');
+        $company->company_email = $request->input('company_email');
         $company->address_id = $address->id;
         $company->save();
 
          // Cliente
          $client = new Client();
-         $client->name = $request->input('name');
-         $client->telephone = $request->input('telephone');
-         $client->nif = $request->input('nif');
-         $client->email = $request->input('email');
+         $client->client_name = $request->input('client_name');
+         $client->client_telephone = $request->input('client_telephone');
+         $client->client_nif = $request->input('client_nif');
+         $client->client_email = $request->input('client_email');
          $client->address_id = $address->id;
          $client->save();
 
@@ -71,14 +75,16 @@ class InvoiceController extends Controller
 
         //Concepto
         $concept = new Concept();
-        $concept->concept = $request->concept;
-        $concept->price = $request->price;
-        $concept->quantity = $request->quantity;
-        $concept->discount = $request->discount;
-        $concept->concept_iva = $request->concept_iva;
-        $concept->concept_irpf = $request->concept_irpf;
-        $concept->invoices_id = "2";
+        $concept->concept = $request->input('concept');
+        $concept->price = $request->input('price');
+        $concept->quantity = $request->input('quantity');
+        $concept->concept_discount = $request->input('concept_discount');
+        $concept->concept_iva = $request->input('concept_iva');
+        $concept->concept_irpf = $request->input('concept_irpf');
+        $concept->invoices_id ="8";
         $concept->save();
+
+
 
         return response()->json($company, 201);
     }

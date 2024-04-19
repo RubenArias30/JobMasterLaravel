@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->integer('subtotal');
-            $table->integer('discount');
+            $table->integer('invoice_discount');
             $table->integer('invoice_iva');
             $table->integer('invoice_irpf');
             $table->integer('total');

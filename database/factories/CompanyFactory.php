@@ -18,10 +18,10 @@ class CompanyFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company,
-            'telephone' => $this->faker->phoneNumber,
-            'nif' => $this->faker->unique()->regexify('[0-9]{8}[A-Z]{1}'),
-            'email' => $this->faker->unique()->safeEmail,
+            'company_name' => $this->faker->company,
+            'company_telephone' => $this->faker->phoneNumber,
+            'company_nif' => $this->faker->unique()->regexify('[0-9]{8}[A-Z]{1}'),
+            'company_email' => $this->faker->unique()->safeEmail,
             'address_id' => Address::inRandomOrder()->first()->id,
         ];
     }

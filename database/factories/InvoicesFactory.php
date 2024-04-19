@@ -20,7 +20,7 @@ class InvoicesFactory extends Factory
     {
         return [
         'subtotal' => $this->faker->randomNumber(4),
-        'discount' => $this->faker->randomNumber(2),
+        'invoice_discount' => $this->faker->randomNumber(2),
         'invoice_iva' => 21,
         'invoice_irpf' => $this->faker->randomNumber(2),
         'total' => $this->faker->randomNumber(4),

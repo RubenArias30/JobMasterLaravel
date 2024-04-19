@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('telephone',20);
-            $table->string('nif');
-            $table->string('email');
+            $table->string('company_name');
+            $table->string('company_telephone',20);
+            $table->string('company_nif');
+            $table->string('company_email');
 
             $table->foreignId('address_id')->constrained('addresses')->onDelete('cascade');
 
