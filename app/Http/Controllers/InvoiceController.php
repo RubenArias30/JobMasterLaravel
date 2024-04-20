@@ -74,16 +74,23 @@ class InvoiceController extends Controller
         // $invoice->save();
 
         //Concepto
+        foreach ($request->input('concepts') as $conceptData) {
         $concept = new Concept();
-        $concept->concept = $request->input('concept');
-        $concept->price = $request->input('price');
-        $concept->quantity = $request->input('quantity');
-        $concept->concept_discount = $request->input('concept_discount');
-        $concept->concept_iva = $request->input('concept_iva');
-        $concept->concept_irpf = $request->input('concept_irpf');
+        $concept->concept = $conceptData['concept'];
+        $concept->price = $conceptData['price'];
+        $concept->quantity = $conceptData['quantity'];
+        $concept->concept_discount = $conceptData['concept_discount'];
+        $concept->concept_iva = $conceptData['concept_iva'];
+        $concept->concept_irpf = $conceptData['concept_irpf'];
+        // $concept->concept = $request->input('concept');
+        // $concept->price = $request->input('price');
+        // $concept->quantity = $request->input('quantity');
+        // $concept->concept_discount = $request->input('concept_discount');
+        // $concept->concept_iva = $request->input('concept_iva');
+        // $concept->concept_irpf = $request->input('concept_irpf');
         $concept->invoices_id ="8";
         $concept->save();
-
+        }
 
 
         return response()->json($company, 201);
