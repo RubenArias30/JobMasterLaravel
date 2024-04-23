@@ -9,7 +9,7 @@ class Invoices extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['subtotal', 'discount', 'invoice_iva', 'invoice_irpf', 'total', 'company_id', 'client_id'];
+    protected $fillable = ['subtotal', 'invoice_discount', 'invoice_iva', 'invoice_irpf', 'total', 'company_id', 'client_id'];
 
     public function company()
     {

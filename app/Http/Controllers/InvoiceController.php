@@ -35,6 +35,7 @@ class InvoiceController extends Controller
             'street' => 'required',
             'city' => 'required',
             'postal_code' => 'required',
+
         ]);
 
         // Dirección
@@ -53,37 +54,46 @@ class InvoiceController extends Controller
         $company->address_id = $address->id;
         $company->save();
 
-         // Cliente
-         $client = new Client();
-         $client->client_name = $request->input('client_name');
-         $client->client_telephone = $request->input('client_telephone');
-         $client->client_nif = $request->input('client_nif');
-         $client->client_email = $request->input('client_email');
-         $client->address_id = $address->id;
-         $client->save();
+        // Cliente
+        $client = new Client();
+        $client->client_name = $request->input('client_name');
+        $client->client_telephone = $request->input('client_telephone');
+        $client->client_nif = $request->input('client_nif');
+        $client->client_email = $request->input('client_email');
+        $client->address_id = $address->id;
+        $client->save();
 
+
+        $subTotal = 0;
+        foreach ($request->input('concepts') as $conceptData) {
+            $subTotal += $conceptData['price'] * $conceptData['quantity'];
+        }
         //Invoice
-        // $invoice = new Invoices();
-        // $invoice->subtotal = $request->subtotal;
-        // $invoice->discount = $request->discount;
-        // $invoice->invoice_iva = $request->invoice_iva;
-        // $invoice->invoice_irpf = $request->invoice_irpf;
-        // $invoice->total = $request->total;
-        // $invoice->company_id = $company->id;
-        // $invoice->client_id = $client->id;
-        // $invoice->save();
+        $invoice = new Invoices();
+        $invoice->subtotal = $subTotal;
+        $invoice->invoice_discount = $request->invoice_discount;
+        $invoice->invoice_iva = $request->invoice_iva;
+        $invoice->invoice_irpf = $request->invoice_irpf;
+        $invoice->total = $request->total;
+        // $invoice->invoice_discount = $request->input('invoice_discount');
+        // $invoice->invoice_iva = $request->input('invoice_iva');
+        // $invoice->invoice_irpf = $request->input('invoice_irpf');
+        // $invoice->total = $request->input('total');
+        $invoice->company_id = $company->id;
+        $invoice->client_id = $client->id;
+        $invoice->save();
 
         //Concepto
         foreach ($request->input('concepts') as $conceptData) {
-        $concept = new Concept();
-        $concept->concept = $conceptData['concept'];
-        $concept->price = $conceptData['price'];
-        $concept->quantity = $conceptData['quantity'];
-        $concept->concept_discount = $conceptData['concept_discount'];
-        $concept->concept_iva = $conceptData['concept_iva'];
-        $concept->concept_irpf = $conceptData['concept_irpf'];
-        $concept->invoices_id ="8";
-        $concept->save();
+            $concept = new Concept();
+            $concept->concept = $conceptData['concept'];
+            $concept->price = $conceptData['price'];
+            $concept->quantity = $conceptData['quantity'];
+            $concept->concept_discount = $conceptData['concept_discount'];
+            $concept->concept_iva = $conceptData['concept_iva'];
+            $concept->concept_irpf = $conceptData['concept_irpf'];
+            $concept->invoices_id = $invoice->id;
+            $concept->save();
         }
 
 
@@ -106,6 +116,4 @@ class InvoiceController extends Controller
 
         return response()->json(['message' => 'Factura eliminada exitosamente']);
     }
-
 }
-

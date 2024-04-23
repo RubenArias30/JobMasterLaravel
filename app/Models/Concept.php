@@ -9,7 +9,7 @@ class Concept extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['concept', 'price', 'quantity', 'discount', 'concept_iva', 'concept_irpf', 'invoices_id'];
+    protected $fillable = ['concept', 'price', 'quantity', 'concept_discount', 'concept_iva', 'concept_irpf', 'invoices_id'];
 
     public function invoices()
     {
