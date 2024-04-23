@@ -38,3 +38,9 @@ Route::get('/budget', [InvoiceController::class, 'index']);
 Route::post('/budget', [InvoiceController::class, 'store']);
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+
+Route::get('/checkNif/{nif}', [EmployeeController::class, 'checkNifExists']);
+
+Route::get('/documents', [DocumentController::class, 'index']);
+Route::post('/documents', [DocumentController::class, 'store']);
+Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
