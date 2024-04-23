@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->integer('subtotal');
-            $table->integer('invoice_discount');
+            $table->float('subtotal');
+            $table->integer('invoice_discount')->nullable();
             $table->integer('invoice_iva');
             $table->integer('invoice_irpf');
-            $table->integer('total');
+            $table->float('total');
 
 
             $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');

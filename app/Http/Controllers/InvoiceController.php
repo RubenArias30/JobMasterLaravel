@@ -75,10 +75,6 @@ class InvoiceController extends Controller
         $invoice->invoice_iva = $request->invoice_iva;
         $invoice->invoice_irpf = $request->invoice_irpf;
         $invoice->total = $request->total;
-        // $invoice->invoice_discount = $request->input('invoice_discount');
-        // $invoice->invoice_iva = $request->input('invoice_iva');
-        // $invoice->invoice_irpf = $request->input('invoice_irpf');
-        // $invoice->total = $request->input('total');
         $invoice->company_id = $company->id;
         $invoice->client_id = $client->id;
         $invoice->save();
