@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\DocumentController;
 
 use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
