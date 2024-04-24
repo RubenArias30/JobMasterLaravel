@@ -9,7 +9,7 @@ class Schedule extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['date', 'arrival_time', 'departure_time', 'day_week', 'employees_id'];
+    protected $fillable = ['title', 'start_datetime', 'end_datetime', 'employees_id'];
 
     public function employees()
     {
