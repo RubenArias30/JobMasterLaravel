@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('concepts', function (Blueprint $table) {
             $table->id();
             $table->string('concept');
-            $table->integer('price');
+            $table->float('price');
             $table->integer('quantity');
             $table->integer('concept_discount');
             $table->integer('concept_iva');
