@@ -11,12 +11,12 @@ class Invoices extends Model
 
     protected $fillable = ['subtotal', 'invoice_discount', 'invoice_iva', 'invoice_irpf', 'total', 'company_id', 'client_id'];
 
-    public function company()
+    public function companies()
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
 
-    public function client()
+    public function clients()
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
