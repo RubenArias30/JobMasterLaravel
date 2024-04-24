@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\DocumentController;
 
 use App\Http\Controllers\LoginController;
 use Illuminate\Http\Request;
@@ -38,3 +39,9 @@ Route::post('/budget', [InvoiceController::class, 'store']);
 Route::put('/budget/{id}', [InvoiceController::class, 'update']);
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+
+Route::get('/checkNif/{nif}', [EmployeeController::class, 'checkNifExists']);
+
+Route::get('/documents', [DocumentController::class, 'index']);
+Route::post('/documents', [DocumentController::class, 'store']);
+Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
