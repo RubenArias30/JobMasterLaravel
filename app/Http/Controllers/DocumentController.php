@@ -7,15 +7,15 @@ use Illuminate\Http\Request;
 class DocumentController extends Controller
 {
      // Método para obtener todos los documentos
-     public function index(Request $request)
-    {
-        $employeeId = $request->query('employeeId');
+     public function index(Request $request, $employeeId)
+     {
+         // Filtrar los documentos por el ID del empleado
+         $documents = Documents::whereHas('employees', function($query) use ($employeeId) {
+             $query->where('id', $employeeId);
+         })->get();
 
-        // Filtrar los documentos por el ID del empleado
-        $documents = Documents::where('employee_id', $employeeId)->get();
-
-        return response()->json($documents);
-    }
+         return response()->json($documents);
+     }
 
      // Método para almacenar un nuevo documento
      public function store(Request $request)
@@ -24,24 +24,26 @@ class DocumentController extends Controller
      }
 
      // Método para eliminar un documento por su ID
-     public function destroy(Documents $document)
-     {
-         $document->delete();
-         return response()->noContent();
-     }
+     public function destroy($id)
+    {
+        // Busca el documento por su ID
+        $document = Documents::find($id);
 
-     public function show($employeeId)
-     {
-         // Obtener documentos por ID de empleado
-         $documents = Documents::where('employees_id', $employeeId)->get();
+        // Verifica si el documento existe
+        if (!$document) {
+            return response()->json(['message' => 'Documento no encontrado'], 404);
+        }
 
-         // Comprobar si se encontraron documentos
-         if ($documents->isEmpty()) {
-             return response()->json(['message' => 'No hay documentos disponibles para este empleado.'], 404);
-         }
+        // Obtén el ID del empleado asociado al documento
+        $employeeId = $document->employees_id;
 
-         return response()->json($documents, 200);
-     }
+        // Elimina el documento de la base de datos
+        $document->delete();
+
+        return response()->json(['message' => 'Documento eliminado correctamente']);
+    }
+
+
 
 }
 

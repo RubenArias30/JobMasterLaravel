@@ -41,10 +41,9 @@ Route::put('/budget/{id}', [InvoiceController::class, 'update']);
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
-Route::get('/documents', [DocumentController::class, 'index']);
-Route::get('/documents/employee/{employeeId}', [DocumentController::class, 'show']);
+Route::get('/documents/{employeeId}', [DocumentController::class, 'index']);
 
-Route::post('/documents', [DocumentController::class, 'store']);
+Route::post('/documents/employeeId', [DocumentController::class, 'store']);
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
 
 
