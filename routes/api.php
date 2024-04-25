@@ -42,7 +42,7 @@ Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
 Route::get('/documents', [DocumentController::class, 'index']);
-Route::get('/documents/employee/{employeeId}', [DocumentController::class, 'getDocumentsByEmployee']);
+Route::get('/documents/employee/{employeeId}', [DocumentController::class, 'show']);
 
 Route::post('/documents', [DocumentController::class, 'store']);
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);

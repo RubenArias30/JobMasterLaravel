@@ -30,7 +30,7 @@ class DocumentController extends Controller
          return response()->noContent();
      }
 
-     public function getDocumentsByEmployee($employeeId)
+     public function show($employeeId)
      {
          // Obtener documentos por ID de empleado
          $documents = Documents::where('employees_id', $employeeId)->get();
