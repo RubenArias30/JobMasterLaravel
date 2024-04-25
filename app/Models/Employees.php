@@ -29,4 +29,8 @@ class Employees extends Model
     {
         return $this->hasMany(Documents::class);
     }
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }

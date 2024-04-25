@@ -15,7 +15,7 @@ class InvoiceController extends Controller
     {
         // $invoices = Invoices::all();
 
-        $invoices = Invoices::with('concepts')->get();
+        $invoices = Invoices::with('clients','companies','concepts')->get();
 
         return response()->json($invoices);
     }

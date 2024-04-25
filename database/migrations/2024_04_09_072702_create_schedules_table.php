@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->time('arrival_time');
-            $table->time('departure_time');
-            $table->string('day_week');
+            $table->string('title');
+            $table->dateTime('start_datetime');
+            $table->dateTime('end_datetime');
+
 
             $table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');
 

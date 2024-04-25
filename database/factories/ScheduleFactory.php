@@ -18,10 +18,9 @@ class ScheduleFactory extends Factory
     public function definition(): array
     {
         return [
-            'date' => $this->faker->date(),
-            'arrival_time' => $this->faker->time(),
-            'departure_time' => $this->faker->time(),
-            'day_week' => $this->faker->randomElement(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
+            'title' => $this->faker->title(),
+            'start_datetime' => $this->faker->dateTime(),
+            'end_datetime' => $this->faker->dateTime(),
             'employees_id' => Employees::inRandomOrder()->first()->id,
         ];
     }

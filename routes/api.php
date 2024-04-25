@@ -4,6 +4,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\DocumentController;
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -40,10 +41,13 @@ Route::put('/budget/{id}', [InvoiceController::class, 'update']);
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 
-Route::get('/checkNif/{nif}', [EmployeeController::class, 'checkNifExists']);
-
 Route::get('/documents', [DocumentController::class, 'index']);
 Route::get('/documents/employee/{employeeId}', [DocumentController::class, 'getDocumentsByEmployee']);
 
 Route::post('/documents', [DocumentController::class, 'store']);
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
+
+
+Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
+Route::get('/employees/{id}', [ScheduleController::class, 'show']);
+
