@@ -43,5 +43,7 @@ Route::put('/employees/{id}', [EmployeeController::class, 'update']);
 Route::get('/checkNif/{nif}', [EmployeeController::class, 'checkNifExists']);
 
 Route::get('/documents', [DocumentController::class, 'index']);
+Route::get('/documents/employee/{employeeId}', [DocumentController::class, 'getDocumentsByEmployee']);
+
 Route::post('/documents', [DocumentController::class, 'store']);
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);

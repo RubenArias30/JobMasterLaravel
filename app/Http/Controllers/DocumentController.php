@@ -7,16 +7,15 @@ use Illuminate\Http\Request;
 class DocumentController extends Controller
 {
      // Método para obtener todos los documentos
-     public function index()
-     {
-   // Obtener el tipo de documento "contracts"
-   $type = 'contracts'; // Puedes ajustar este valor según tus necesidades
+     public function index(Request $request)
+    {
+        $employeeId = $request->query('employeeId');
 
-   // Obtener todos los documentos filtrados por el tipo de documento
-   $documents = Document::where('type_documents', $type)->get();
+        // Filtrar los documentos por el ID del empleado
+        $documents = Documents::where('employee_id', $employeeId)->get();
 
-   return response()->json($documents);
-     }
+        return response()->json($documents);
+    }
 
      // Método para almacenar un nuevo documento
      public function store(Request $request)
@@ -30,4 +29,19 @@ class DocumentController extends Controller
          $document->delete();
          return response()->noContent();
      }
+
+     public function getDocumentsByEmployee($employeeId)
+     {
+         // Obtener documentos por ID de empleado
+         $documents = Documents::where('employees_id', $employeeId)->get();
+
+         // Comprobar si se encontraron documentos
+         if ($documents->isEmpty()) {
+             return response()->json(['message' => 'No hay documentos disponibles para este empleado.'], 404);
+         }
+
+         return response()->json($documents, 200);
+     }
+
 }
+
