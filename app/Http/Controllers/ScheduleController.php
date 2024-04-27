@@ -8,6 +8,19 @@ use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
+    public function index($employeeId)
+{
+    $employee = Employees::find($employeeId);
+
+    if (!$employee) {
+        return response()->json(['error' => 'Empleado no encontrado'], 404);
+    }
+
+    $schedules = $employee->schedules;
+
+    return response()->json($schedules, 200);
+}
+
     public function store(Request $request, $id)
     {
         // Encuentra al empleado

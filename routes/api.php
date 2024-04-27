@@ -51,4 +51,5 @@ Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
 //Schedule
 Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
 Route::get('/employees/{id}', [ScheduleController::class, 'show']);
+Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
 
