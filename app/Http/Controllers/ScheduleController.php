@@ -8,23 +8,27 @@ use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-    public function index($employeeId)
-    {
-        $employee = Employees::find($employeeId);
+   public function index($employeeId)
+{
+    $employee = Employees::find($employeeId);
 
-        if (!$employee) {
-            return response()->json(['error' => 'Empleado no encontrado'], 404);
-        }
-
-        // Define el rango de fechas
-        $startDate = date('Y-m-d', strtotime('-30 days')); // Fecha de inicio hace 30 días
-        $endDate = date('Y-m-d'); // Fecha actual
-
-        // Consulta los eventos dentro del rango de fechas
-        $schedules = $employee->schedules()->whereBetween('start_datetime', [$startDate, $endDate])->get();
-
-        return response()->json($schedules, 200);
+    if (!$employee) {
+        return response()->json(['error' => 'Empleado no encontrado'], 404);
     }
+
+    // Obtener la fecha actual y el primer y último día del mes actual
+    $currentDate = now();
+    $firstDayOfMonth = $currentDate->startOfMonth()->toDateString();
+    $lastDayOfMonth = $currentDate->endOfMonth()->toDateString();
+
+    // Consultar los eventos asociados al empleado dentro del mes actual
+    $schedules = $employee->schedules()
+        ->whereBetween('start_datetime', [$firstDayOfMonth, $lastDayOfMonth])
+        ->get();
+
+    return response()->json($schedules, 200);
+}
+
 
 
     public function store(Request $request, $id)
@@ -43,17 +47,25 @@ class ScheduleController extends Controller
             'end_datetime' => 'required',
         ]);
 
-        // Verificar si ya existe un horario en la fecha seleccionada
         $existingSchedule = $employee->schedules()
-            ->where(function ($query) use ($request) {
-                $query->whereBetween('start_datetime', [$request->start_datetime, $request->end_datetime])
-                      ->orWhereBetween('end_datetime', [$request->start_datetime, $request->end_datetime])
-                      ->orWhere(function ($query) use ($request) {
-                          $query->where('start_datetime', '<=', $request->start_datetime)
-                                ->where('end_datetime', '>=', $request->end_datetime);
-                      });
+        ->where(function ($query) use ($request) {
+            $query->where(function ($query) use ($request) {
+                // Caso 1: El nuevo horario comienza dentro de un horario existente
+                $query->where('start_datetime', '>=', $request->start_datetime)
+                      ->where('start_datetime', '<', $request->end_datetime);
             })
-            ->exists();
+            ->orWhere(function ($query) use ($request) {
+                // Caso 2: El nuevo horario termina dentro de un horario existente
+                $query->where('end_datetime', '>', $request->start_datetime)
+                      ->where('end_datetime', '<=', $request->end_datetime);
+            })
+            ->orWhere(function ($query) use ($request) {
+                // Caso 3: El nuevo horario está completamente contenido dentro de un horario existente
+                $query->where('start_datetime', '<=', $request->start_datetime)
+                      ->where('end_datetime', '>=', $request->end_datetime);
+            });
+        })
+        ->exists();
 
         if ($existingSchedule) {
             return response()->json(['error' => 'Ya existe un horario en el rango de fechas especificado'], 400);
@@ -71,6 +83,31 @@ class ScheduleController extends Controller
 
         return response()->json($schedule, 201);
     }
+
+    public function checkExistingSchedule(Request $request, $id)
+{
+    // Encuentra al empleado
+    $employee = Employees::find($id);
+
+    if (!$employee) {
+        return response()->json(['error' => 'Empleado no encontrado'], 404);
+    }
+
+    // Verificar si ya existe un horario en el rango de fechas especificado
+    $existingSchedule = $employee->schedules()
+        ->where(function ($query) use ($request) {
+            $query->whereBetween('start_datetime', [$request->start_datetime, $request->end_datetime])
+                  ->orWhereBetween('end_datetime', [$request->start_datetime, $request->end_datetime])
+                  ->orWhere(function ($query) use ($request) {
+                      $query->where('start_datetime', '<=', $request->start_datetime)
+                            ->where('end_datetime', '>=', $request->end_datetime);
+                  });
+        })
+        ->exists();
+
+    return response()->json(['exists' => $existingSchedule]);
+}
+
 
     public function show($id)
     {

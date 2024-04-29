@@ -52,4 +52,5 @@ Route::post('/documents/details/{employeeId}/{documentId}', [DocumentController:
 Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
 Route::get('/employees/{id}', [ScheduleController::class, 'show']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
+Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class, 'checkExistingSchedule']);
 
