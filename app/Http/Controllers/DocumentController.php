@@ -17,11 +17,38 @@ class DocumentController extends Controller
          return response()->json($documents);
      }
 
-     // Método para almacenar un nuevo documento
-     public function store(Request $request)
-     {
-         return Documents::create($request->all());
-     }
+     public function store(Request $request, $employeeId)
+    {
+        // Primero, validamos la solicitud
+        $request->validate([
+            'type' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+            'date' => 'required|date',
+            'file' => 'required|mimes:pdf,doc,docx|max:2048', // Adjust the max file size as needed
+        ]);
+
+        // Verificamos si el empleado existe
+        $employee = Employees::find($employeeId);
+        if (!$employee) {
+            return response()->json(['error' => 'El empleado no existe'], 404);
+        }
+
+        // Guardamos el documento asociado al empleado
+        $document = new Documents();
+        $document->type = $request->input('type');
+        $document->name = $request->input('name');
+        $document->description = $request->input('description');
+        $document->date = $request->input('date');
+        // Guardamos el archivo en storage (o en el sistema de archivos, dependiendo de tu configuración)
+        $document->file = $request->file('file')->store('documents');
+        // Asociamos el documento al empleado
+        $document->employee_id = $employeeId;
+        $document->save();
+
+        return response()->json(['message' => 'Documento agregado al empleado correctamente', 'document' => $document], 201);
+    }
+
 
      // Método para eliminar un documento por su ID
      public function destroy($id)
