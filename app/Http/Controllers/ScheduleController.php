@@ -43,6 +43,22 @@ class ScheduleController extends Controller
             'end_datetime' => 'required',
         ]);
 
+        // Verificar si ya existe un horario en la fecha seleccionada
+        $existingSchedule = $employee->schedules()
+            ->where(function ($query) use ($request) {
+                $query->whereBetween('start_datetime', [$request->start_datetime, $request->end_datetime])
+                      ->orWhereBetween('end_datetime', [$request->start_datetime, $request->end_datetime])
+                      ->orWhere(function ($query) use ($request) {
+                          $query->where('start_datetime', '<=', $request->start_datetime)
+                                ->where('end_datetime', '>=', $request->end_datetime);
+                      });
+            })
+            ->exists();
+
+        if ($existingSchedule) {
+            return response()->json(['error' => 'Ya existe un horario en el rango de fechas especificado'], 400);
+        }
+
         // Crea el horario
         $schedule = new Schedule([
             'title' => $request->title,
