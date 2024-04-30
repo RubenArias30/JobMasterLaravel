@@ -4,6 +4,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\DocumentController;
 
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AusenciaController;
 use App\Http\Controllers\ScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -52,4 +53,12 @@ Route::post('/documents/details/{employeeId}/{documentId}', [DocumentController:
 Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
 Route::get('/employees/{id}', [ScheduleController::class, 'show']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
+
+//ausencias
+
+Route::get('/ausencias', [AusenciaController::class, 'index']);
+Route::post('/ausencias', [AusenciaController::class, 'store']);
+Route::get('/ausencias/{id}', [AusenciaController::class, 'show']);
+Route::put('/ausencias/{id}', [AusenciaController::class, 'update']);
+Route::delete('/ausencias/{id}', [AusenciaController::class, 'destroy']);
 
