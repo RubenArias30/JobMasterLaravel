@@ -45,7 +45,7 @@ Route::put('/budget/{id}', [InvoiceController::class, 'update']);
 //DOCUMENT
 Route::get('/documents/{employeeId}', [DocumentController::class, 'index']);
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
-Route::post('/documents/details/{employeeId}/{documentId}', [DocumentController::class, 'store']);
+Route::post('/documents/details/{employeeId}', [DocumentController::class, 'store']);
 
 
 //Schedule
