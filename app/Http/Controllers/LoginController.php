@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employees;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class LoginController extends Controller
@@ -25,14 +26,15 @@ class LoginController extends Controller
     {
         $credentials = request(['nif', 'password']);
 
-        try {
+        //try {
             // Autenticar al usuario
-            if (! $token = auth()->attempt($credentials)) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'Credenciales inválidas'], 401);
             }
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
-        }
+
+        // } catch (JWTException $e) {
+        //     return response()->json(['error' => 'Could not create token'], 500);
+        // }
 
 
 
