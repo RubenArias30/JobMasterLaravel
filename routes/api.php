@@ -56,8 +56,7 @@ Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index'
 Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class, 'checkExistingSchedule']);
 
 //Incidents
-
-Route::get('/incidents', [IncidentController::class, 'index']);
+Route::get('/all_incidents', [IncidentController::class, 'index']);
 Route::get('/incidents', [IncidentController::class, 'show']);
 Route::post('/incidents', [IncidentController::class, 'store']);
 Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
