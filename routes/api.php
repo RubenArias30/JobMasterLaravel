@@ -54,3 +54,6 @@ Route::get('/employees/{id}', [ScheduleController::class, 'show']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
 Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class, 'checkExistingSchedule']);
 
+// Route::delete('/employees/{employeeId}/schedules/{scheduleId}', [ScheduleController::class, 'destroy']);
+
+Route::delete('employees/{employeeId}/schedules/{scheduleId}', 'ScheduleController@delete');
