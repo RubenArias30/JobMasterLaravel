@@ -33,4 +33,10 @@ class Employees extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+
+    public function incidents()
+{
+    return $this->hasMany(Incidents::class);
+}
+
 }

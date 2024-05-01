@@ -11,7 +11,7 @@ class Incidents extends Model
 
     protected $fillable = ['incident_type', 'description', 'date', 'employees_id'];
 
-    public function employees()
+    public function employee()
     {
         return $this->belongsTo(Employees::class, 'employees_id');
     }

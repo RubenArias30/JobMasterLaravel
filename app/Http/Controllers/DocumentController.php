@@ -1,68 +1,50 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Documents;
+use App\Models\Employees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class DocumentController extends Controller
 {
-     // Método para obtener todos los documentos
-     public function index(Request $request, $employeeId)
-     {
-         // Filtrar los documentos por el ID del empleado
-         $documents = Documents::whereHas('employees', function($query) use ($employeeId) {
-             $query->where('id', $employeeId);
-         })->get();
+    // Método para obtener todos los documentos
+    public function index(Request $request, $employeeId)
+    {
+        // Encuentra el empleado por su ID
+        $employee = Employees::findOrFail($employeeId);
 
-         return response()->json($documents);
-     }
+        // Obtén los documentos asociados al empleado
+        $documents = $employee->documents;
 
-     public function store(Request $request, $employeeId)
-     {
-         // Validar los datos de la solicitud
-         $validator = Validator::make($request->all(), [
-             'type_documents' => 'required',
-             'name' => 'required',
-             'description' => 'required',
-             'date' => 'required|date',
-            //  'file' => 'required|mimes:pdf,doc,docx|max:2048', // Ajustar el tamaño máximo del archivo según sea necesario
-         ]);
+        return response()->json($documents);
+    }
 
-         // Si la validación falla, devolver los errores en una respuesta JSON
-         if ($validator->fails()) {
-             return response()->json(['errors' => $validator->errors()], 422);
-         }
+    public function store(Request $request, $employeeId)
+    {
+        // Valida los datos del formulario
+        $validatedData = $request->validate([
+            'type_documents' => 'required',
+            'name' => 'required',
+            'description' => 'required',
+            'date' => 'required|date',
+            'route' => 'required', // Puedes agregar más reglas de validación según tus necesidades
+        ]);
 
-          // Verificar si se ha enviado un archivo en la solicitud
-        if ($request->hasFile('route')) {
-            // Crear y almacenar el documento
-            $document = new Documents();
-            $document->type_documents = $request->input('type_documents');
-            $document->name = $request->input('name');
-            $document->description = $request->input('description');
-            $document->date = $request->input('date');
-            // Acceder al archivo de la solicitud y almacenarlo en el directorio 'documents'
-            $document->route = $request->file('route')->store('documents');
-            $document->employee_id = $employeeId; // Asociar el documento al empleado
-            $document->save();
+        // Encuentra el empleado por su ID
+        $employee = Employees::findOrFail($employeeId);
 
-            // Devolver una respuesta JSON con el documento creado y un código de estado 201 (Created)
-            return response()->json(['message' => 'Documento agregado al empleado correctamente', 'document' => $document], 201);
-        } else {
-            // Manejar el caso en que no se envió ningún archivo
-            return response()->json(['error' => 'No se ha enviado ningún archivo en la solicitud'], 422);
-        }
-         // Devolver una respuesta JSON con el documento creado y un código de estado 201 (Created)
-         return response()->json(['message' => 'Documento agregado al empleado correctamente', 'document' => $document], 201);
-     }
+        // Crea un nuevo documento asociado al empleado
+        $document = new Documents($validatedData);
+        $employee->documents()->save($document);
 
+        // Retorna el documento recién creado
+        return response()->json($document, 201);
+    }
 
-
-
-
-     // Método para eliminar un documento por su ID
-     public function destroy($id)
+    // Método para eliminar un documento por su ID
+    public function destroy($id)
     {
         // Busca el documento por su ID
         $document = Documents::find($id);
@@ -80,8 +62,4 @@ class DocumentController extends Controller
 
         return response()->json(['message' => 'Documento eliminado correctamente']);
     }
-
-
-
 }
-

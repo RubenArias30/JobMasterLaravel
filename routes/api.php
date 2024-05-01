@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\DocumentController;
@@ -45,7 +46,7 @@ Route::put('/budget/{id}', [InvoiceController::class, 'update']);
 //DOCUMENT
 Route::get('/documents/{employeeId}', [DocumentController::class, 'index']);
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
-Route::post('/documents/details/{employeeId}', [DocumentController::class, 'store']);
+Route::post('employees/{employee}/documents', [DocumentController::class, 'store']);
 
 
 //Schedule
@@ -54,6 +55,12 @@ Route::get('/employees/{id}', [ScheduleController::class, 'show']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
 Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class, 'checkExistingSchedule']);
 
-// Route::delete('/employees/{employeeId}/schedules/{scheduleId}', [ScheduleController::class, 'destroy']);
 
 Route::delete('employees/{employeeId}/schedules/{scheduleId}', 'ScheduleController@delete');
+
+//Incidents
+Route::get('/all_incidents', [IncidentController::class, 'index']);
+Route::get('/incidents', [IncidentController::class, 'show']);
+Route::post('/incidents', [IncidentController::class, 'store']);
+Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
+

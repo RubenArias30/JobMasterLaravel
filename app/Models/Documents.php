@@ -11,7 +11,7 @@ class Documents extends Model
 
     protected $fillable = ['type_documents', 'name', 'description', 'date', 'route', 'employees_id'];
 
-    public function employees()
+    public function employee()
     {
         return $this->belongsTo(Employees::class, 'employees_id');
     }
