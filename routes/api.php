@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\DocumentController;
@@ -53,4 +54,10 @@ Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
 Route::get('/employees/{id}', [ScheduleController::class, 'show']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
 Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class, 'checkExistingSchedule']);
+
+//Incidents
+
+Route::get('/incidents', [IncidentController::class, 'index']);
+Route::post('/incidents', [IncidentController::class, 'store']);
+Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
 
