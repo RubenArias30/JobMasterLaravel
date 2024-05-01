@@ -58,6 +58,7 @@ Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class
 //Incidents
 
 Route::get('/incidents', [IncidentController::class, 'index']);
+Route::get('/incidents', [IncidentController::class, 'show']);
 Route::post('/incidents', [IncidentController::class, 'store']);
 Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
 

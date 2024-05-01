@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 
 class IncidentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     public function index()
     {
         // Obtener todas las incidencias
@@ -37,12 +41,12 @@ class IncidentController extends Controller
         return response()->json($incident, 201);
     }
 
-    public function show($id)
-    {
-        // Obtener una incidencia específica por su ID
-        $incident = Incidents::findOrFail($id);
-        return response()->json($incident);
-    }
+    public function show()
+{
+    $employeeId = auth()->user()->id;
+    $incidents = Incidents::where('employees_id', $employeeId)->get();
+    return response()->json($incidents);
+}
 
 
 
