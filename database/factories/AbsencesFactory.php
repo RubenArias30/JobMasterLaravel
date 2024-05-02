@@ -21,6 +21,7 @@ class AbsencesFactory extends Factory
             'start_date' => $this->faker->date(),
             'end_date' => $this->faker->date(),
             'motive' => $this->faker->sentence(),
+            'type_absence' => $this->faker->randomElement(['Vacaciones', 'Enfermedad', 'Maternidad/Paternidad', 'Compensatorias', 'Baja', 'Otros']), // Add 'type' here
             'employees_id' => Employees::inRandomOrder()->first()->id,
         ];
     }
