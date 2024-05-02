@@ -33,4 +33,8 @@ class Employees extends Model
     {
         return $this->hasMany(Schedule::class);
     }
+    public function absence()
+    {
+        return $this->belongsTo(Absences::class);
+    }
 }

@@ -5,6 +5,7 @@ use App\Http\Controllers\DocumentController;
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AusenciaController;
+use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\ScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -56,9 +57,7 @@ Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index'
 
 //ausencias
 
-Route::get('/ausencias', [AusenciaController::class, 'index']);
-Route::post('/ausencias', [AusenciaController::class, 'store']);
-Route::get('/ausencias/{id}', [AusenciaController::class, 'show']);
-Route::put('/ausencias/{id}', [AusenciaController::class, 'update']);
-Route::delete('/ausencias/{id}', [AusenciaController::class, 'destroy']);
+Route::get('/absences', [AbsenceController::class, 'index']);
+Route::post('/absences', [AbsenceController::class, 'store']); // Create a new absence
+
 
