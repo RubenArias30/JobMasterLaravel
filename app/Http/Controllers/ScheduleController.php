@@ -94,24 +94,57 @@ class ScheduleController extends Controller
 }
 
 
+    public function show($id)
+    {
+        $employee = Employees::findOrFail($id);
+        return response()->json($employee);
+    }
+
+
+//     public function destroy($employeeId, $scheduleId)
+// {
+//     // Encuentra al empleado
+//     $employee = Employees::find($employeeId);
+
+//     if (!$employee) {
+//         return response()->json(['error' => 'Empleado no encontrado'], 404);
+//     }
+
+//     // Encuentra el horario a eliminar
+//     $schedule = $employee->schedules()->find($scheduleId);
+
+//     if (!$schedule) {
+//         return response()->json(['error' => 'Horario no encontrado'], 404);
+//     }
+
+//     // Elimina el horario
+//     $schedule->delete();
+
+//     return response()->json(null, 204); // Retorna una respuesta vacía con el código 204 (No Content) para indicar que se eliminó el horario correctamente
+// }
 public function delete(Request $request, $employeeId, $scheduleId)
 {
-     // Buscar el evento por el ID
-     $schedule = Schedule::find($scheduleId);
+    // Valida los datos
+    $request->validate([
+        'schedule_id' => 'required|exists:schedules,id',
+    ]);
 
-     if (!$schedule) {
-         return response()->json(['message' => 'Evento no encontrado'], 404);
-     }
+    // Accede al schedule_id desde la solicitud
+    $scheduleId = $request->schedule_id;
 
-     // Verificar si el evento pertenece al empleado correspondiente
-     if ($schedule->employee_id != $employeeId) {
-         return response()->json(['message' => 'El evento no pertenece al empleado especificado'], 403);
-     }
+    // Encuentra el horario del empleado
+    $schedule = Schedule::where('id', $scheduleId)
+                        ->where('employees_id', $employeeId)
+                        ->first();
 
-     // Eliminar el evento
-     $schedule->delete();
+    if (!$schedule) {
+        return response()->json(['error' => 'Horario no encontrado'], 404);
+    }
 
-     return response()->json(['message' => 'Evento eliminado correctamente'], 200);
+    // Elimina el horario
+    $schedule->delete();
+
+    return response()->json(['message' => 'Horario eliminado correctamente']);
 }
 
 

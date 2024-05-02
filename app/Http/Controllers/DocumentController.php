@@ -62,19 +62,4 @@ class DocumentController extends Controller
 
         return response()->json(['message' => 'Documento eliminado correctamente']);
     }
-    public function show(Request $request)
-    {
-        dd($request->user());
-
-
-        // Obtén el ID del empleado autenticado
-        $employeeId = $request->user()->id;
-
-        // Obtén los documentos asociados al empleado
-        $documents = Documents::where('employee_id', $employeeId)->get();
-
-        return response()->json($documents);
-    }
-
-
 }
