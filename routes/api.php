@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
@@ -63,4 +64,8 @@ Route::get('/all_incidents', [IncidentController::class, 'index']);
 Route::get('/incidents', [IncidentController::class, 'show']);
 Route::post('/incidents', [IncidentController::class, 'store']);
 Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
+
+//Attendances
+Route::post('/attendances/entry', [AttendancesController::class, 'registerEntry']);
+Route::post('/attendances/exit', [AttendancesController::class, 'registerExit']);
 

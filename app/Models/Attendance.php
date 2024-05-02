@@ -11,7 +11,7 @@ class Attendance extends Model
 
     protected $fillable = ['date', 'start_time', 'end_time', 'absense_type', 'employees_id'];
 
-    public function employees()
+    public function employee()
     {
         return $this->belongsTo(Employees::class, 'employees_id');
     }
