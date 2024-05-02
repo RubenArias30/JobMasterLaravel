@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->date('start_date');
             $table->date('end_date');
+            $table->string('type_absence');
             $table->string('motive');
 
             $table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');
 
             $table->timestamps();
-
 
         });
     }

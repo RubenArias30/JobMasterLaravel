@@ -9,10 +9,15 @@ class Absences extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['start_date', 'end_date', 'motive', 'employees_id'];
+    protected $fillable = ['start_date', 'end_date', 'motive','type_absence', 'employees_id'];
 
-    public function employees()
+    public function employee()
     {
         return $this->belongsTo(Employees::class, 'employees_id');
     }
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
+
 }
