@@ -122,30 +122,43 @@ class ScheduleController extends Controller
 
 //     return response()->json(null, 204); // Retorna una respuesta vacía con el código 204 (No Content) para indicar que se eliminó el horario correctamente
 // }
-public function delete(Request $request, $employeeId, $scheduleId)
+
+
+// public function delete(Request $request, $employeeId, $scheduleId)
+// {
+//     // Valida los datos
+//     $request->validate([
+//         'schedule_id' => 'required|exists:schedules,id',
+//     ]);
+
+//     // Accede al schedule_id desde la solicitud
+//     $scheduleId = $request->schedule_id;
+
+//     // Encuentra el horario del empleado
+//     $schedule = Schedule::where('id', $scheduleId)
+//                         ->where('employees_id', $employeeId)
+//                         ->first();
+
+//     if (!$schedule) {
+//         return response()->json(['error' => 'Horario no encontrado'], 404);
+//     }
+
+//     // Elimina el horario
+//     $schedule->delete();
+
+//     return response()->json(['message' => 'Horario eliminado correctamente']);
+// }
+
+public function deleteEvent($id)
 {
-    // Valida los datos
-    $request->validate([
-        'schedule_id' => 'required|exists:schedules,id',
-    ]);
-
-    // Accede al schedule_id desde la solicitud
-    $scheduleId = $request->schedule_id;
-
-    // Encuentra el horario del empleado
-    $schedule = Schedule::where('id', $scheduleId)
-                        ->where('employees_id', $employeeId)
-                        ->first();
-
-    if (!$schedule) {
-        return response()->json(['error' => 'Horario no encontrado'], 404);
+    $event = Schedule::find($id);
+    if (!$event) {
+        return response()->json(['error' => 'Evento no encontrado'], 404);
     }
-
-    // Elimina el horario
-    $schedule->delete();
-
-    return response()->json(['message' => 'Horario eliminado correctamente']);
+    $event->delete();
+    return response()->json(['message' => 'Evento eliminado correctamente']);
 }
+
 
 
 }
