@@ -20,6 +20,7 @@ class AttendanceFactory extends Factory
         return [
             'date' => $this->faker->date(),
             'start_time' => $this->faker->time(),
+            'current_time' => $this->faker->time(),
             'end_time' => $this->faker->time(),
             'absence_type' => $this->faker->randomElement(['faltas no justificadas', 'vacaciones', 'bajas']),
             'employees_id' => Employees::inRandomOrder()->first()->id,

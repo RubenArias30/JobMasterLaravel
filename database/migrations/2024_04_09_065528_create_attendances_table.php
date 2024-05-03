@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->time('start_time');
+            $table->time('current_time')->nullable();
             $table->time('end_time')->nullable();
             $table->string('absence_type')->nullable();
 

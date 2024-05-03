@@ -68,4 +68,5 @@ Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
 //Attendances
 Route::post('/attendances/entry', [AttendancesController::class, 'registerEntry']);
 Route::post('/attendances/exit', [AttendancesController::class, 'registerExit']);
-
+Route::get('/attendance/start-time', [AttendancesController::class, 'getStartTime']);
+Route::get('/attendance/{id}', [AttendancesController::class, 'getUpdateTime']);
