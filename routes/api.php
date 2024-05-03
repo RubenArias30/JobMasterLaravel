@@ -58,6 +58,7 @@ Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index'
 //ausencias
 
 Route::get('/absences', [AbsenceController::class, 'index']);
-Route::post('/absences', [AbsenceController::class, 'store']); // Create a new absence
+// Route::post('/absences', [AbsenceController::class, 'store']); // Create a new absence
+Route::post('/absences', [AbsenceController::class, 'store']);
 
 

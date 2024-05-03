@@ -15,9 +15,6 @@ class Absences extends Model
     {
         return $this->belongsTo(Employees::class, 'employees_id');
     }
-    public function users()
-    {
-        return $this->belongsTo(User::class, 'users_id');
-    }
+
 
 }

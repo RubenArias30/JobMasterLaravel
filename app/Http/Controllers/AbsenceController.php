@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absences;
-use App\Models\Employees;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
@@ -16,40 +13,40 @@ class AbsenceController extends Controller
      */
     public function index()
     {
-        $absences = Absences::with('employee,user')->get();
-        return response()->json($absences);
+        $Absences = Absences::with('employee,user')->get();
+        return response()->json($Absences);
     }
 
     public function store(Request $request)
-{
-    $userId = Auth::id(); // Get the authenticated user's ID
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'type_absence' => 'required|string',
+            'motive' => 'required|string',
+        ]);
 
-    $validatedData = $request->validate([
-        'start_date' => 'required|date',
-        'end_date' => 'required|date|after:start_date',
-        'motive' => 'required|string|max:255',
-        'type' => 'required|string|in:Vacaciones,Enfermedad,Maternidad/Paternidad,Compensatorias,Baja,Otros',
-        'employee_id' => 'required|exists:employees,id'
-    ]);
+        // // Create the absence record
+        // $absence = Absences::create($validatedData);
+         // Create a new absence record
 
-    // Check if the authenticated user's ID is available
-    if (!$userId) {
-        return response()->json(['error' => 'User ID not found'], 500);
+         $absence = new Absences();
+         $absence->start_date = $request->input('start_date');
+         $absence->end_date = $request->input('end_date');
+         $absence->type_absence = $request->input('type_absence');
+         $absence->motive = $request->input('motive');
+         $absence->employees_id = $request->input('employee_id');
+         $absence->save();
+
+
+
+        // Return a response
+        return response()->json(['message' => 'Absence created successfully', 'data' => $absence], 201);
+
+
     }
-
-    // Create the absence record
-    $absence = new Absences();
-    $absence->start_date = $validatedData['start_date'];
-    $absence->end_date = $validatedData['end_date'];
-    $absence->motive = $validatedData['motive'];
-    $absence->type = $validatedData['type'];
-    $absence->employee_id = $userId;
-
-    // Save the absence record
-    $absence->save();
-
-    return response()->json($absence, 201);
-}
 
     /**
      * Display the specified resource.
