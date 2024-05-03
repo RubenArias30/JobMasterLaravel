@@ -52,12 +52,13 @@ Route::post('employees/{employee}/documents', [DocumentController::class, 'store
 
 //Schedule
 Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
-Route::get('/employees/{id}', [ScheduleController::class, 'show']);
+// Route::get('/employees/{id}', [ScheduleController::class, 'show']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
 Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class, 'checkExistingSchedule']);
 
+Route::delete('/events/{id}', [ScheduleController::class, 'deleteEvent']);
 
-Route::delete('employees/{employeeId}/schedules/{scheduleId}', 'ScheduleController@delete');
+// Route::delete('employees/{employeeId}/schedules/{scheduleId}', 'ScheduleController@delete');
 
 //Incidents
 Route::get('/all_incidents', [IncidentController::class, 'index']);
