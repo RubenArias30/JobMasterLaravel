@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('incident_type');
             $table->string('description');
             $table->string('date');
+            $table->enum('status', ['completed', 'pending'])->default('pending');
 
             $table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');
 

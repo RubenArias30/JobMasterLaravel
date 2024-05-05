@@ -21,7 +21,9 @@ class IncidentsFactory extends Factory
             'incident_type' => $this->faker->randomElement(['tardanza', 'falta', 'cambio de contraseña', 'accidente laboral']),
             'description' => $this->faker->sentence,
             'date' => $this->faker->date(),
+            'status' => $this->faker->randomElement(['completed', 'pending']),
             'employees_id' => Employees::inRandomOrder()->first()->id,
+
         ];
     }
 }

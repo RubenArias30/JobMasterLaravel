@@ -9,7 +9,7 @@ class Incidents extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['incident_type', 'description', 'date', 'employees_id'];
+    protected $fillable = ['incident_type', 'description', 'date', 'status', 'employees_id'];
 
     public function employee()
     {

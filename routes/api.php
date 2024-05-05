@@ -67,6 +67,7 @@ Route::get('/all_incidents', [IncidentController::class, 'index']);
 Route::get('/incidents', [IncidentController::class, 'show']);
 Route::post('/incidents', [IncidentController::class, 'store']);
 Route::delete('/incidents/{id}', [IncidentController::class, 'destroy']);
+Route::put('/incidents/{id}/status', [IncidentController::class, 'updateStatus']);
 
 //Attendances
 Route::post('/attendances/entry', [AttendancesController::class, 'registerEntry']);
