@@ -34,7 +34,7 @@ class IncidentController extends Controller
         $incident->description = $request->description;
         $incident->date = $request->date;
         // Asignar el ID del empleado que está creando la incidencia
-        $incident->employees_id = auth()->user()->id; // Asumiendo que tienes un sistema de autenticación configurado correctamente
+        $incident->employees_id = auth()->user()->id;
 
         $incident->save();
 
@@ -42,11 +42,28 @@ class IncidentController extends Controller
     }
 
     public function show()
-{
-    $employeeId = auth()->user()->id;
-    $incidents = Incidents::where('employees_id', $employeeId)->get();
-    return response()->json($incidents);
-}
+    {
+        $employeeId = auth()->user()->id;
+        $incidents = Incidents::where('employees_id', $employeeId)->get();
+        return response()->json($incidents);
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        // Buscar la incidencia por su ID
+        $incident = Incidents::findOrFail($id);
+
+        // Validar el nuevo estado
+        $request->validate([
+            'status' => 'required|in:completed,pending',
+        ]);
+
+        // Actualizar el estado de la incidencia
+        $incident->status = $request->status;
+        $incident->save();
+
+        return response()->json($incident, 200);
+    }
 
 
 
