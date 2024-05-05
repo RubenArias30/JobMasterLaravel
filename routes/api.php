@@ -9,6 +9,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController; // Importa el controlador ProfileController
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +56,7 @@ Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
 // Route::get('/employees/{id}', [ScheduleController::class, 'show']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
 Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class, 'checkExistingSchedule']);
+Route::get('/events/{id}', [ScheduleController::class, 'show']);
 
 Route::delete('/events/{id}', [ScheduleController::class, 'deleteEvent']);
 
@@ -71,3 +73,7 @@ Route::post('/attendances/entry', [AttendancesController::class, 'registerEntry'
 Route::post('/attendances/exit', [AttendancesController::class, 'registerExit']);
 Route::get('/attendance/start-time', [AttendancesController::class, 'getStartTime']);
 Route::get('/attendance/{id}', [AttendancesController::class, 'getUpdateTime']);
+
+
+//MiPerfil(employees)
+Route::get('/profile', [ProfileController::class, 'getProfile']);

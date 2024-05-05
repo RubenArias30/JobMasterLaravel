@@ -94,11 +94,14 @@ class ScheduleController extends Controller
 }
 
 
-    public function show($id)
-    {
-        $employee = Employees::findOrFail($id);
-        return response()->json($employee);
+public function show($id)
+{
+    $event = Schedule::find($id);
+    if (!$event) {
+        return response()->json(['error' => 'Evento no encontrado'], 404);
     }
+    return response()->json($event);
+}
 
 
 //     public function destroy($employeeId, $scheduleId)
