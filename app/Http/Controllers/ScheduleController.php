@@ -103,6 +103,21 @@ public function show($id)
     return response()->json($event);
 }
 
+public function update(Request $request, $id)
+    {
+        // Encuentra el evento
+        $event = Schedule::find($id);
+
+        // Actualiza los campos del evento con los datos del formulario
+        $event->update([
+            'title' => $request->input('title'),
+            'start_datetime' => $request->input('start_datetime'),
+            'end_datetime' => $request->input('end_datetime'),
+        ]);
+
+        // Devuelve una respuesta JSON
+        return response()->json($event);
+    }
 
 //     public function destroy($employeeId, $scheduleId)
 // {
