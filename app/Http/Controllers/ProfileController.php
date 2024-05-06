@@ -19,8 +19,11 @@ class ProfileController extends Controller
             // Obtener el ID del usuario autenticado
             $userId = Auth::user()->id;
 
-            // Buscar el perfil del empleado asociado al usuario autenticado
-            $employee = Employees::where('users_id', $userId)->with('addresses','users')->first();
+                // Buscar el perfil del empleado asociado al usuario autenticado
+        // Buscar el perfil del empleado asociado al usuario autenticado
+        $employee = Employees::where('users_id', $userId)
+            ->with(['addresses', 'users']) // Cargar datos de las relaciones
+            ->first();
 
             return response()->json($employee);
             // // Verificar si se encontró el perfil del empleado
