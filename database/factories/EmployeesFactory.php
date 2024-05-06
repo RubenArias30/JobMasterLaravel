@@ -16,9 +16,19 @@ class EmployeesFactory extends Factory
      * Define the model's default state.
      *
      * @return array<string, mixed>
+     *
+     *
      */
+     // Static variables to keep track of IDs
+     protected static $userId = 1;
+     protected static $addressId = 1;
+
     public function definition(): array
     {
+        // Incrementing IDs
+        $userId = static::$userId++;
+        $addressId = static::$addressId++;
+
         return [
             'name' => $this->faker->firstName,
             'surname' => $this->faker->lastName,
@@ -28,8 +38,8 @@ class EmployeesFactory extends Factory
             'telephone' => $this->faker->phoneNumber,
             'country' => $this->faker->country,
             'photo' => $this->faker->imageUrl(),
-            'users_id' => User::inRandomOrder()->first()->id,
-            'address_id' => Address::inRandomOrder()->first()->id,
+            'users_id' => $userId,
+            'address_id' => $addressId,
             'company_id' => Company::exists() ? Company::inRandomOrder()->first()->id : null,
         ];
     }

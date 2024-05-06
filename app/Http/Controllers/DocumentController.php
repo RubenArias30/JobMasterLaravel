@@ -6,9 +6,15 @@ use App\Models\Documents;
 use App\Models\Employees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class DocumentController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     // Método para obtener todos los documentos
     public function index(Request $request, $employeeId)
     {
@@ -21,6 +27,24 @@ class DocumentController extends Controller
         return response()->json($documents);
     }
 
+    // Método para obtener los documentos del empleado autenticado
+public function myDocuments()
+{
+    // Obtenemos el empleado autenticado
+    $employee = Auth::user()->id;
+
+    // Verificamos si el empleado existe
+    if (!$employee) {
+        return response()->json(['message' => 'Empleado no encontrado'], 404);
+    }
+
+    // Obtenemos los documentos asociados al empleado logeuado
+    $documents = Documents::where('employees_id', $employee)->get();
+
+    return response()->json($documents);
+}
+
+
     public function store(Request $request, $employeeId)
     {
         // Valida los datos del formulario
@@ -29,7 +53,7 @@ class DocumentController extends Controller
             'name' => 'required',
             'description' => 'required',
             'date' => 'required|date',
-            'route' => 'required', // Puedes agregar más reglas de validación según tus necesidades
+            'route' => 'required',
         ]);
 
         // Encuentra el empleado por su ID

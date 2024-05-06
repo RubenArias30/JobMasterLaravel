@@ -50,7 +50,7 @@ Route::put('/budget/{id}', [InvoiceController::class, 'update']);
 Route::get('/documents/{employeeId}', [DocumentController::class, 'index']);
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
 Route::post('employees/{employee}/documents', [DocumentController::class, 'store']);
-
+Route::get('/my-documents', [DocumentController::class, 'myDocuments']);
 
 //Schedule
 Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
@@ -61,8 +61,6 @@ Route::get('/events/{id}', [ScheduleController::class, 'show']);
 Route::put('/events/{id}', [ScheduleController::class, 'update']);
 
 Route::delete('/events/{id}', [ScheduleController::class, 'deleteEvent']);
-
-// Route::delete('employees/{employeeId}/schedules/{scheduleId}', 'ScheduleController@delete');
 
 //Incidents
 Route::get('/all_incidents', [IncidentController::class, 'index']);
