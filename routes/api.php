@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AttendancesController;
+use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
@@ -78,3 +79,11 @@ Route::get('/attendance/{id}', [AttendancesController::class, 'getUpdateTime']);
 
 //MiPerfil(employees)
 Route::get('/profile', [ProfileController::class, 'getProfile']);
+
+//ausencias
+Route::get('/absences', [AbsenceController::class, 'index']);
+// Route::post('/absences', [AbsenceController::class, 'store']); // Create a new absence
+Route::post('/absences', [AbsenceController::class, 'store']);
+Route::delete('//absences/{id}', [AbsenceController::class, 'destroy']);
+// Route::delete('/absences/{id}', 'AbsenceController@destroy');
+
