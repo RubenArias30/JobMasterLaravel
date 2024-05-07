@@ -11,6 +11,7 @@ use App\Http\Controllers\ScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController; // Importa el controlador ProfileController
+use App\Http\Controllers\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,11 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::get('/me', [LoginController::class, 'me']);
 Route::post('/refresh', [LoginController::class, 'refresh']);
 Route::post('/logout', [LoginController::class, 'logout']);
+
+//RESET PASSWORD
+Route::post('/sendPasswordResetLink', [ResetPasswordController::class, 'resetPasswordRequest']);
+Route::post('/resetPassword', [ResetPasswordController::class, 'resetPassword']);
+
 
 //EMPLOYEE
 Route::get('/employees', [EmployeeController::class, 'index']);
