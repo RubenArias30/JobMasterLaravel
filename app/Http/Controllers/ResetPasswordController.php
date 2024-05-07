@@ -71,10 +71,7 @@ class ResetPasswordController extends Controller
            return $this->resetPasswordTable($validated) ? $this->changePasswordDB($validated) :
                $this->NotFound();
        } catch (\Exception $e) {
-          // \Log::error('Reset password erroremail2: ' . $e->getMessage());
 
-
-           // Return an error response with a meaningful message
            return response()->json(['error' => 'An unexpected error occurred while processing your request.'], 500);
        }
     }
@@ -82,7 +79,6 @@ class ResetPasswordController extends Controller
 
        public function resetPasswordTable($request)
        {
-           // Accede a los valores del array utilizando la sintaxis de array
            return DB::table('password_resets')->where(['email' => $request['email'], 'token' => $request['resetToken']]);
        }
 
