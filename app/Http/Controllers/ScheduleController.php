@@ -8,8 +8,14 @@ use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-       public function index($employeeId)
-{
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
+    public function index($employeeId)
+    {
     $employee = Employees::find($employeeId);
 
     if (!$employee) {
@@ -20,6 +26,26 @@ class ScheduleController extends Controller
 
     return response()->json($schedules, 200);
 }
+
+ // Método para obtener el horario de un empleado específico
+ public function getEmployeeSchedule($employeeId)
+ {
+      // Obtenemos el usuario autenticado actualmente
+      $user = Auth::user();
+
+      // Verificamos si el usuario es un empleado
+      if ($user && $user->isEmployee()) {
+          // Obtenemos el ID del empleado asociado al usuario
+          $employeeId = $user->employee->id;
+
+          // Buscamos el horario del empleado utilizando su ID
+          $schedules = Schedule::where('employee_id', $employeeId)->get();
+
+          return response()->json($schedules, 200);
+      }
+
+      return response()->json(['error' => 'No autorizado'], 401);
+ }
 
 
 
