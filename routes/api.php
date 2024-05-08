@@ -60,13 +60,10 @@ Route::get('/my-documents', [DocumentController::class, 'myDocuments']);
 
 //Schedule
 Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
-// Route::get('/employees/{id}', [ScheduleController::class, 'show']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
-Route::post('employees/{id}/check-existing-schedule', [ScheduleController::class, 'checkExistingSchedule']);
 Route::get('/events/{id}', [ScheduleController::class, 'show']);
 Route::put('/events/{id}', [ScheduleController::class, 'update']);
 Route::delete('/events/{id}', [ScheduleController::class, 'deleteEvent']);
-
 Route::get('/employees/events', [ScheduleController::class, 'getEmployeeSchedule']);
 
 //Incidents
