@@ -84,5 +84,7 @@ Route::get('/absences', [AbsenceController::class, 'index']);
 // Route::post('/absences', [AbsenceController::class, 'store']); // Create a new absence
 Route::post('/absences', [AbsenceController::class, 'store']);
 Route::delete('//absences/{id}', [AbsenceController::class, 'destroy']);
+Route::put('/absences/{id}', [AbsenceController::class, 'update']); // Update an existing absence
 // Route::delete('/absences/{id}', 'AbsenceController@destroy');
+Route::get('/absences/{id}', [AbsenceController::class, 'show']);
 

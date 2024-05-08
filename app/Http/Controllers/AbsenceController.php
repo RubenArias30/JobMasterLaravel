@@ -51,9 +51,9 @@ class AbsenceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Absences $absence)
     {
-        //
+        return response()->json($absence);
     }
 
     /**
@@ -61,8 +61,31 @@ class AbsenceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Validate the request data
+        $validatedData = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'type_absence' => 'required|string',
+            'motive' => 'required|string',
+        ]);
+
+        // Find the absence record by ID
+        $absence = Absences::findOrFail($id);
+
+        // Update the absence record with the validated data
+        $absence->start_date = $validatedData['start_date'];
+        $absence->end_date = $validatedData['end_date'];
+        $absence->type_absence = $validatedData['type_absence'];
+        $absence->motive = $validatedData['motive'];
+        // Optionally, you can also update other fields if needed
+
+        // Save the updated absence record
+        $absence->save();
+
+        // Return a response
+        return response()->json(['message' => 'Absence updated successfully', 'data' => $absence], 200);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -74,6 +97,7 @@ class AbsenceController extends Controller
 
       return response()->json(['message' => 'Absence deleted successfully'], 200);
     }
+
 
 
 
