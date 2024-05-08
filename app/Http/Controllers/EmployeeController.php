@@ -35,7 +35,7 @@ class EmployeeController extends Controller
                 'nif' => 'required',
                 'password' => 'required',
             ]);
-    
+
             // Crear un nuevo registro de empleado
             $employee = new Employees();
             $employee->name = $request['name'];
@@ -46,36 +46,36 @@ class EmployeeController extends Controller
             $employee->country = $request['country'];
             $employee->photo = $request['photo'];
             $employee->users_id = $userId;
-    
+
             // Guardar los datos de dirección
             $address = new Address();
             $address->street = $request['street'];
             $address->city = $request['city'];
             $address->postal_code = $request['postal_code'];
             $address->save();
-    
+
             $employee->address_id = $address->id;
-    
+
             // Guardar los datos de credenciales
             $credentials = new User();
             $credentials->nif = $request['nif'];
             $credentials->password = bcrypt($request->input('password'));
             $credentials->roles = 'empleado';
             $credentials->save();
-    
+
             // Relacionar las credenciales con el empleado
             $employee->users_id = $credentials->id;
-    
+
             $employee->save();
-    
+
             return response()->json($employee, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al crear el empleado: ' . $e->getMessage()], 500);
         }
     }
-    
-    
-    
+
+
+
 
     public function update(Request $request, $id)
     {
@@ -97,7 +97,7 @@ class EmployeeController extends Controller
                 'gender',
                 'telephone',
                 'country',
-                'photo',
+                'photo'
             ]));
 
             // Actualizar los datos de dirección
@@ -111,10 +111,10 @@ class EmployeeController extends Controller
 
             // Actualizamos los datos de credenciales
             if ($employee->users) {
-                $employee->users->update($request->only([
-                    'nif',
-                    'password',
-                ]));
+                $employee->users->update([
+                    'nif' => $request->input('nif'),
+                    'password' => bcrypt($request->input('password')),
+                ]);
             }
 
             return response()->json($employee, 200);
