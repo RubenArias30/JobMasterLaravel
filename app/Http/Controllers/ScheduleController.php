@@ -86,21 +86,31 @@ class ScheduleController extends Controller
     public function update(Request $request, $id)
     {
 
-        $event = Schedule::find($id);
+        // Encuentra el horario por su ID
+        $schedule = Schedule::find($id);
 
-        if (!$event) {
+        // Verifica si el horario existe
+        if (!$schedule) {
             return response()->json(['message' => 'Horario no encontrado'], 404);
         }
 
-        // Actualizar los datos del horario
-        $event->title = $request->input('title');
-        $event->start_datetime = $request->input('start_datetime');
-        $event->end_datetime = $request->input('end_datetime');
+        // Valida los datos del formulario
+        $request->validate([
+            'title' => 'required',
+            'start_datetime' => 'required|date',
+            'end_datetime' => 'required|date',
+        ]);
 
-         // Guardar los cambios en la base de datos
-         $event->save();
+        // Actualiza los datos del horario
+        $schedule->title = $request->input('title');
+        $schedule->start_datetime = $request->input('start_datetime');
+        $schedule->end_datetime = $request->input('end_datetime');
 
-         return response()->json(['message' => 'Horario actualizado correctamente', 'schedule' => $event], 200);
+        // Guarda los cambios en la base de datos
+        $schedule->save();
+
+        // Devuelve una respuesta JSON con un mensaje de éxito y los datos del horario actualizados
+        return response()->json(['message' => 'Horario actualizado correctamente', 'schedule' => $schedule], 200);
     }
 
 
