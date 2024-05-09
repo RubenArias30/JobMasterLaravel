@@ -83,6 +83,22 @@ class ScheduleController extends Controller
         return response()->json($event);
     }
 
+    public function showSchedule(Request $request, $id)
+    {
+        // Obtener el empleado autenticado
+        $employeeId = $request->user()->id;
+
+        // Verificar si el empleado existe
+        if (!$employeeId) {
+            return response()->json(['error' => 'Empleado no encontrado'], 404);
+        }
+
+        // Obtener los horarios del empleado
+        $schedule = Schedule::where('employees_id', $id)->get();
+
+        return response()->json($schedule);
+    }
+
     public function update(Request $request, $id)
     {
 

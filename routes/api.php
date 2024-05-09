@@ -62,6 +62,7 @@ Route::get('/my-documents', [DocumentController::class, 'myDocuments']);
 Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
 Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index']);
 Route::get('/events/{id}', [ScheduleController::class, 'show']);
+Route::get('/schedule/{id}', [ScheduleController::class, 'showSchedule']);
 Route::put('/events/{id}', [ScheduleController::class, 'update']);
 Route::delete('/events/{id}', [ScheduleController::class, 'deleteEvent']);
 Route::get('/employees/events', [ScheduleController::class, 'getEmployeeSchedule']);
