@@ -83,7 +83,7 @@ class ScheduleController extends Controller
         return response()->json($event);
     }
 
-    public function showSchedule(Request $request, $id)
+    public function showSchedule(Request $request)
     {
         // Obtener el empleado autenticado
         $employeeId = $request->user()->id;
@@ -94,7 +94,7 @@ class ScheduleController extends Controller
         }
 
         // Obtener los horarios del empleado
-        $schedule = Schedule::where('employees_id', $id)->get();
+        $schedule = Schedule::where('employees_id', $employeeId)->get();
 
         return response()->json($schedule);
     }
