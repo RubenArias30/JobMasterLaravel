@@ -22,7 +22,11 @@ class CompanyFactory extends Factory
             'company_telephone' => $this->faker->phoneNumber,
             'company_nif' => $this->faker->unique()->regexify('[0-9]{8}[A-Z]{1}'),
             'company_email' => $this->faker->unique()->safeEmail,
-            'address_id' => Address::inRandomOrder()->first()->id,
+            'company_street' => $this->faker->streetName,
+            'company_city' => $this->faker->city,
+            'company_postal_code' => $this->faker->numberBetween(00000, 99999)
+
+
         ];
     }
 }
