@@ -17,8 +17,11 @@ return new class extends Migration
             $table->string('client_telephone');
             $table->string('client_nif');
             $table->string('client_email');
+            $table->string('client_street');
+            $table->string('client_city');
+            $table->integer('client_postal_code');
 
-            $table->foreignId('address_id')->constrained('addresses')->onDelete('cascade');
+            // $table->foreignId('address_id')->constrained('addresses')->onDelete('cascade');
 
             $table->timestamps();
 

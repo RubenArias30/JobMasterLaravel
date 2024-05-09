@@ -17,8 +17,10 @@ return new class extends Migration
             $table->string('company_telephone',20);
             $table->string('company_nif');
             $table->string('company_email');
-
-            $table->foreignId('address_id')->constrained('addresses')->onDelete('cascade');
+            $table->string('company_street');
+            $table->string('company_city');
+            $table->integer('company_postal_code');
+            // $table->foreignId('address_id')->constrained('addresses')->onDelete('cascade');
 
             $table->timestamps();
         });

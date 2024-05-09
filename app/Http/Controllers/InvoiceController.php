@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Address;
+
 use App\Models\Client;
 use App\Models\Company;
 use Illuminate\Http\Request;
@@ -28,13 +28,16 @@ class InvoiceController extends Controller
             'client_telephone' => 'required',
             'client_nif' => 'required',
             'client_email' => 'required|email',
+            'client_street' => 'required',
+            'client_city' => 'required',
+            'client_postal_code' => 'required',
             'company_name' => 'required',
             'company_telephone' => 'required',
             'company_nif' => 'required',
             'company_email' => 'required|email',
-            'street' => 'required',
-            'city' => 'required',
-            'postal_code' => 'required',
+            'company_street' => 'required',
+            'company_city' => 'required',
+            'company_postal_code' => 'required',
             'concepts.*.concept' => 'required',
             'concepts.*.price' => 'required|numeric|min:0',
             'concepts.*.quantity' => 'required|numeric|min:1',
@@ -45,11 +48,11 @@ class InvoiceController extends Controller
         ]);
 
         // Dirección
-        $address = new Address();
-        $address->street = $request->input('street');
-        $address->city = $request->input('city');
-        $address->postal_code = $request->input('postal_code');
-        $address->save();
+        // $address = new Address();
+        // $address->street = $request->input('street');
+        // $address->city = $request->input('city');
+        // $address->postal_code = $request->input('postal_code');
+        // $address->save();
 
         // Compañia
         $company = new Company();
@@ -57,7 +60,10 @@ class InvoiceController extends Controller
         $company->company_telephone = $request->input('company_telephone');
         $company->company_nif = $request->input('company_nif');
         $company->company_email = $request->input('company_email');
-        $company->address_id = $address->id;
+        $company->company_street = $request->input('company_street');
+        $company->company_city = $request->input('company_city');
+        $company->company_postal_code = $request->input('company_postal_code');
+
         $company->save();
 
         // Cliente
@@ -66,7 +72,9 @@ class InvoiceController extends Controller
         $client->client_telephone = $request->input('client_telephone');
         $client->client_nif = $request->input('client_nif');
         $client->client_email = $request->input('client_email');
-        $client->address_id = $address->id;
+        $client->client_street = $request->input('client_street');
+        $client->client_city = $request->input('client_city');
+        $client->client_postal_code = $request->input('client_postal_code');
         $client->save();
 
 
@@ -145,12 +153,12 @@ class InvoiceController extends Controller
         ]);
 
         // Actualizar la dirección asociada
-        $address = Address::find($company->address_id);
-        $address->update([
-            'street' => $request->street,
-            'city' => $request->city,
-            'postal_code' => $request->postal_code,
-        ]);
+        // $address = Address::find($company->address_id);
+        // $address->update([
+        //     'street' => $request->street,
+        //     'city' => $request->city,
+        //     'postal_code' => $request->postal_code,
+        // ]);
 
         // Eliminar los conceptos existentes asociados a la factura
         $invoice->concepts()->delete();
@@ -190,7 +198,7 @@ class InvoiceController extends Controller
 
     public function show($id)
 {
-    $employee = Invoices::with('addresses', 'clients', 'companies', 'concepts')->find($id);
+    $employee = Invoices::with('clients', 'companies', 'concepts')->find($id);
 
     if (!$employee) {
         return response()->json(['message' => 'Presupuesto no encontrado'], 404);

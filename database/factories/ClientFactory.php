@@ -22,7 +22,9 @@ class ClientFactory extends Factory
             'client_telephone' => $this->faker->phoneNumber,
             'client_nif' => $this->faker->unique()->regexify('[0-9]{8}[A-Z]{1}'),
             'client_email' => $this->faker->unique()->safeEmail,
-            'address_id' => Address::inRandomOrder()->first()->id,
+            'client_street' => $this->faker->streetName,
+            'client_city' => $this->faker->city,
+            'client_postal_code' => $this->faker->numberBetween(00000, 99999)
         ];
     }
 }
