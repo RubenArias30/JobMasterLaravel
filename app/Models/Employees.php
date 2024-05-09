@@ -35,13 +35,11 @@ class Employees extends Model
     }
 
     public function incidents()
-{
-    return $this->hasMany(Incidents::class);
-}
-public function absences()
-{
-    return $this->belongsTo(Absences::class);
-}
-
-
+    {
+        return $this->hasMany(Incidents::class);
+    }
+    public function absences()
+    {
+        return $this->belongsTo(Absences::class);
+    }
 }
