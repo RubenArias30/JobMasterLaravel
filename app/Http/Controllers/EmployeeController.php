@@ -14,9 +14,10 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employees::whereHas('users', function($query) {
+        $employees = Employees::with('addresses', 'users')->whereHas('users', function($query) {
             $query->where('roles', '!=', 'admin');
         })->get();
+
         return response()->json($employees);
     }
 
