@@ -53,7 +53,7 @@ class EmployeeController extends Controller
             $employee->date_of_birth = $request['date_of_birth'];
             $employee->telephone = $request['telephone'];
             $employee->country = $request['country'];
-            $employee->photo = 'http://localhost:8000/assets/img/employees/' . $originalName;
+            $employee->photo = 'http://localhost:8000/img/employees/' . $originalName;
             //$employee->photo = 'http://jobmaster.es/img/employees/' . $originalName;
             $employee->users_id = $userId;
 
@@ -153,9 +153,26 @@ class EmployeeController extends Controller
 }
 
 
+public function checkNifExists($nif)
+{
+    try {
+        // Buscar un empleado con el mismo NIF en la base de datos
+        $existingEmployee = Employees::whereHas('users', function ($query) use ($nif) {
+            $query->where('nif', $nif);
+        })->first();
 
+        // Si se encuentra un empleado con el mismo NIF, devuelve true
+        if ($existingEmployee) {
+            return response()->json(true);
+        }
 
-
+        // Si no se encuentra ningún empleado con el mismo NIF, devuelve false
+        return response()->json(false);
+    } catch (\Exception $e) {
+        // Si ocurre algún error, devuelve un mensaje de error
+        return response()->json(['error' => 'Error al verificar el NIF: ' . $e->getMessage()], 500);
+    }
+}
 
     // Método para eliminar un empleado
     public function delete($id)
