@@ -53,7 +53,8 @@ class EmployeeController extends Controller
             $employee->date_of_birth = $request['date_of_birth'];
             $employee->telephone = $request['telephone'];
             $employee->country = $request['country'];
-            $employee->photo = 'http://localhost:8000/img/employees/' . $originalName;
+            $employee->photo = 'http://localhost:8000/assets/img/employees/' . $originalName;
+            //$employee->photo = 'http://jobmaster.es/img/employees/' . $originalName;
             $employee->users_id = $userId;
 
             // Guardar los datos de dirección
