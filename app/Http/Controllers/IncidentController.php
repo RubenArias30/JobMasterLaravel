@@ -70,7 +70,7 @@ class IncidentController extends Controller
     public function destroy($id)
     {
         // Buscar la incidencia por su ID y eliminarla
-        $incident = Incidents::findOrFail($id);
+        $incident = Incidents::find($id);
         $incident->delete();
 
         return response()->json(null, 204);
