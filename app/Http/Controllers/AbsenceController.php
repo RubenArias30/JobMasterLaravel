@@ -13,9 +13,16 @@ class AbsenceController extends Controller
      */
     public function index()
     {
-        $absences = Absences::with('employee', 'user')->get();
+        // Obtener las ausencias excluyendo aquellas asociadas al employee_id igual a 1
+        $absences = Absences::with('employee', 'user')
+            ->whereHas('employee', function ($query) {
+                $query->where('id', '!=', 1);
+            })
+            ->get();
+
         return response()->json($absences);
     }
+
 
     public function store(Request $request)
     {

@@ -29,13 +29,19 @@ class EmployeesFactory extends Factory
         $userId = static::$userId++;
         $addressId = static::$addressId++;
 
+
+        $startDate = '-70 years'; // Fecha mínima (hace 70 años)
+        $endDate = '-18 years'; // Fecha máxima (hace 18 años menos que la fecha actual)
+
+
+
         return [
             'name' => $this->faker->firstName,
             'surname' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
-            'date_of_birth' => $this->faker->date(),
+            'date_of_birth' =>$this->faker->dateTimeBetween($startDate, $endDate)->format('Y-m-d'),
             'gender' => $this->faker->randomElement(['male', 'female']),
-            'telephone' => $this->faker->phoneNumber,
+            'telephone' => $this->generatePhoneNumber(),
             'country' => $this->faker->country,
             'photo' => $this->faker->imageUrl(),
             'users_id' => $userId,
@@ -43,4 +49,19 @@ class EmployeesFactory extends Factory
             'company_id' => Company::exists() ? Company::inRandomOrder()->first()->id : null,
         ];
     }
+
+    function generatePhoneNumber() {
+        $prefixes = ['6', '7'];
+        $prefix = $prefixes[array_rand($prefixes)]; // Selecciona aleatoriamente un prefijo válido (6 o 7)
+
+        // Genera los 8 dígitos restantes del número de teléfono
+        $digits = '';
+        for ($i = 0; $i < 8; $i++) {
+            $digits .= mt_rand(0, 9);
+        }
+
+        return $prefix . $digits;
+    }
+
+
 }
