@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('incidents', function (Blueprint $table) {
             $table->id();
-            $table->string('incident_type');
+            $table->enum('incident_type', ['Delay','Absence','password_change','Request','Complaint','Others']);
             $table->string('description');
             $table->string('date');
             $table->enum('status', ['completed', 'pending'])->default('pending');

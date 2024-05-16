@@ -45,21 +45,6 @@ class ScheduleController extends Controller
             'end_datetime' => 'required',
         ]);
 
-        // Verifica si ya existe un horario en el rango de fechas especificado
-        $existingSchedule = $employee->schedules()
-            ->where(function ($query) use ($request) {
-                $query->whereBetween('start_datetime', [$request->start_datetime, $request->end_datetime])
-                    ->orWhereBetween('end_datetime', [$request->start_datetime, $request->end_datetime])
-                    ->orWhere(function ($query) use ($request) {
-                        $query->where('start_datetime', '<=', $request->start_datetime)
-                            ->where('end_datetime', '>=', $request->end_datetime);
-                    });
-            })
-            ->exists();
-
-        if ($existingSchedule) {
-            return response()->json(['error' => 'Ya existe un horario en el rango de fechas especificado'], 400);
-        }
 
         // Crea el horario
         $schedule = new Schedule([
@@ -117,6 +102,9 @@ class ScheduleController extends Controller
             'end_datetime' => 'required|date',
         ]);
 
+        //  // Formatea las fechas correctamente
+        // $start_datetime = date('Y-m-d H:i:s', strtotime($request->input('start_datetime')));
+        // $end_datetime = date('Y-m-d H:i:s', strtotime($request->input('end_datetime')));
         // Actualiza los datos del horario
         $schedule->title = $request->input('title');
         $schedule->start_datetime = $request->input('start_datetime');
@@ -132,11 +120,11 @@ class ScheduleController extends Controller
 
     public function deleteEvent($id)
     {
-        // $event = Schedule::find($id);
-        // if (!$event) {
-        //     return response()->json(['error' => 'Evento no encontrado'], 404);
-        // }
-        // $event->delete();
-        // return response()->json(['message' => 'Evento eliminado correctamente']);
+        $event = Schedule::find($id);
+        if (!$event) {
+            return response()->json(['error' => 'Evento no encontrado'], 404);
+        }
+        $event->delete();
+        return response()->json(['message' => 'Evento eliminado correctamente']);
     }
 }
