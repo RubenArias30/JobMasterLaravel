@@ -18,7 +18,7 @@ class IncidentsFactory extends Factory
     public function definition(): array
     {
         return [
-            'incident_type' => $this->faker->randomElement(['tardanza', 'falta', 'cambio de contraseña', 'accidente laboral']),
+            'incident_type' => $this->faker->randomElement(['Delay','Absence','password_change','Request','Complaint','Others']),
             'description' => $this->faker->sentence,
             'date' => $this->faker->date(),
             'status' => $this->faker->randomElement(['completed', 'pending']),
