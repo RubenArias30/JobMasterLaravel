@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Attendance;
+use App\Models\Employees;
 use Illuminate\Support\Facades\Auth;
 
 class AttendancesController extends Controller
@@ -18,18 +19,22 @@ class AttendancesController extends Controller
         // Obtiene el ID del usuario autenticado
         $userId = auth()->user()->id;
 
-        // Crear un nuevo registro de asistencia para la entrada del empleado
+        // Crear un nuevo registro de asistencia
         $attendance = new Attendance();
+
+        // Configurar los datos del nuevo registro
         $attendance->date = now()->toDateString(); // Obtener la fecha actual
         $attendance->start_time = now()->toTimeString(); // Obtener la hora actual
         $attendance->current_time = now()->toTimeString(); // Guardar el tiempo actual como current_time
         $attendance->employees_id = $userId; // Asignar el ID del usuario autenticado como el ID del empleado
+        $attendance->status = 'present'; // Actualiza el estado del empleado como "presente"
+
+        // Guardar el nuevo registro en la base de datos
         $attendance->save();
 
-        // Retorna una respuesta de éxito
-        return response()->json(['message' => 'Entrada registrada correctamente'], 201);
+        // Retorna una respuesta de éxito con código 201 (Created)
+        return response()->json(['message' => 'Entrada registrada correctamente como presente'], 201);
     }
-
 
     public function registerExit(Request $request)
     {
@@ -47,6 +52,7 @@ class AttendancesController extends Controller
         // Actualizar el registro de asistencia con la hora de salida solo si aún no se ha registrado
         if (!$attendance->end_time) {
             $attendance->end_time = now()->toTimeString();
+            $attendance->status = 'finalized';
             $attendance->save();
             return response()->json(['message' => 'Salida registrada correctamente'], 200);
         } else {
@@ -54,40 +60,30 @@ class AttendancesController extends Controller
         }
     }
 
-    // public function getUpdateTime($id)
-    // {
-    //     // Obtener el ID del usuario autenticado
-    //     $userId = auth()->user()->id;
-
-    //     // Buscar la entrada de asistencia por su ID y el ID del usuario autenticado
-    //     $attendance = Attendance::where('id', $id)
-    //         ->where('employees_id', $userId)
-    //         ->first();
-
-    //     if (!$attendance) {
-    //         // Si no se encuentra la entrada o no pertenece al usuario, puedes manejar el caso aquí
-    //         return response()->json(['error' => 'No se encontró la entrada de asistencia'], 404);
-    //     }
-
-    //     // Devolver el tiempo actual de la entrada
-    //     return $attendance->current_time;
-    // }
-    public function getCurrentTime()
+    public function getEmployeeStatus()
     {
-        return response()->json(['current_time' => now()->toTimeString()]);
-    }
+        // Obtener el ID de todos los empleados
+        $employeeIds = Employees::pluck('id');
 
+        // Filtrar el ID del administrador para excluirlo
+        $adminId = 1;
+        $employeeIds = $employeeIds->reject(function ($employeeId) use ($adminId) {
+            return $employeeId === $adminId;
+        });
 
-    public function getStartTime()
-    {
-        $userId = auth()->user()->id;
-        $attendance = Attendance::where('employees_id', $userId)->latest()->first();
+        // Obtener el ID de los empleados con al menos una asistencia presente
+        $presentEmployeeIds = Attendance::whereIn('employees_id', $employeeIds)
+            ->where('status', 'present')
+            ->distinct()
+            ->pluck('employees_id');
 
-        if ($attendance && $attendance->start_time) {
-            return response()->json(['start_time' => $attendance->start_time], 200);
-        } else {
-            return response()->json(['error' => 'No se encontró el tiempo de inicio'], 404);
-        }
+        // Calcular el número de empleados inactivos
+        $inactiveEmployeeCount = count($employeeIds) - count($presentEmployeeIds);
+
+        return response()->json([
+            'present_employee_count' => count($presentEmployeeIds),
+            'inactive_employee_count' => $inactiveEmployeeCount
+        ]);
     }
 
 

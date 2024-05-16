@@ -95,7 +95,7 @@ class LoginController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'expires_in' => JWTAuth::factory()->setTTL(1440)->getTTL() * 60,
             'roles' => $user->roles,
         ]);
     }

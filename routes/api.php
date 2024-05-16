@@ -78,14 +78,13 @@ Route::put('/incidents/{id}/status', [IncidentController::class, 'updateStatus']
 //Attendances
 Route::post('/attendances/entry', [AttendancesController::class, 'registerEntry']);
 Route::post('/attendances/exit', [AttendancesController::class, 'registerExit']);
-Route::get('/attendance/start-time', [AttendancesController::class, 'getStartTime']);
-Route::get('/attendance/{id}', [AttendancesController::class, 'getUpdateTime']);
+Route::get('/employee-status', [AttendancesController::class, 'getEmployeeStatus']);
 
 
-//MiPerfil(employees)
+//My Profile(employees)
 Route::get('/profile', [ProfileController::class, 'getProfile']);
 
-//ausencias
+//Absences
 Route::get('/absences', [AbsenceController::class, 'index']);
 Route::post('/absences', [AbsenceController::class, 'store']);
 Route::delete('//absences/{id}', [AbsenceController::class, 'destroy']);
