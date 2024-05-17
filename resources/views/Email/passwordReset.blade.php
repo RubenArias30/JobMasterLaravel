@@ -1,12 +1,12 @@
 <x-mail::message>
-# Change Password Request
+# Solicitud para Cambiar Contraseña
 
-Click on the button below to change password
+Para cambiar tu contraseña, haz clic en el botón de abajo:
 
-<x-mail::button :url="'http://localhost:4200/response-password-reset?token='.$token">
-Reset Password
+<x-mail::button :url="'http://localhost:4200/response-password-reset?token='.$token" color="primary">
+Cambiar Contraseña
 </x-mail::button>
 
-Thanks,<br>
+Gracias,<br>
 {{ config('app.name') }}
 </x-mail::message>

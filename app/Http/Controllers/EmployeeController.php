@@ -14,7 +14,7 @@ class EmployeeController extends Controller
 {
     public function index()
     {
-        $employees = Employees::with('addresses', 'users')->whereHas('users', function($query) {
+        $employees = Employees::with('addresses', 'users')->whereHas('users', function ($query) {
             $query->where('roles', '!=', 'admin');
         })->get();
 
@@ -85,94 +85,100 @@ class EmployeeController extends Controller
 
 
     public function update(Request $request, $id)
-{
-    try {
-        // Buscamos al empleado por su ID
-        $employee = Employees::find($id);
+    {
+        try {
+            // Buscamos al empleado por su ID
+            $employee = Employees::find($id);
 
-        // Verificamos si el empleado existe
-        if (!$employee) {
-            return response()->json(['message' => 'Empleado no encontrado'], 404);
-        }
-
-        // Validar los datos de entrada antes de actualizar
-        $request->validate([
-            'name' => 'required|string',
-            'surname' => 'required|string',
-            'email' => 'required|email',
-            'date_of_birth' => 'required|date',
-            'gender' => 'required|string',
-            'telephone' => 'required|string',
-            'country' => 'required|string',
-            'nif' => 'required|string',
-        ]);
-
-        // Actualizamos los datos del empleado
-        $employee->update($request->only([
-            'name',
-            'surname',
-            'email',
-            'date_of_birth',
-            'gender',
-            'telephone',
-            'country',
-        ]));
-
-        // Actualizar la imagen del empleado si se proporciona una nueva
-        if ($request->hasFile('photo')) {
-            // Eliminamos la foto anterior si existe
-            if ($employee->photo) {
-                // Eliminamos la imagen anterior
-                $previousPhotoPath = public_path($employee->photo);
-                if (file_exists($previousPhotoPath)) {
-                    unlink($previousPhotoPath);
-                }
+            // Verificamos si el empleado existe
+            if (!$employee) {
+                return response()->json(['message' => 'Empleado no encontrado'], 404);
             }
 
-            // Subimos la nueva foto
-            $file = $request->file('photo');
-            $originalName = $file->getClientOriginalName();
-            $photoPath = 'img/employees/' . $originalName;
-            $file->move(public_path('img/employees'), $originalName);
+            // Validar los datos de entrada antes de actualizar
+            $request->validate([
+                'name' => 'required|string',
+                'surname' => 'required|string',
+                'email' => 'required|email',
+                'date_of_birth' => 'required|date',
+                'gender' => 'required|string',
+                'telephone' => 'required|string',
+                'country' => 'required|string',
+                'nif' => 'required|string',
 
-            // Actualizamos el campo 'photo' en la base de datos
-            $employee->photo = $photoPath;
-        }
-
-        // Actualizamos los datos de credenciales
-        if ($employee->users) {
-            $employee->users->update([
-                'nif' => $request->input('nif'),
             ]);
+
+            // Actualizar la imagen del empleado si se proporciona una nueva
+            if ($request->hasFile('photo')) {
+                $photo = $request->file('photo');
+
+                // Eliminar la foto anterior si existe
+                if ($employee->photo) {
+                    $previousPhotoPath = public_path($employee->photo);
+                    if (file_exists($previousPhotoPath)) {
+                        unlink($previousPhotoPath);
+                    }
+                }
+
+                // Manejar la carga de archivos y posibles errores
+                try {
+                    $originalName = $photo->getClientOriginalName();
+                    $photoPath = 'img/employees/' . $originalName;
+                    $photo->move(public_path('img/employees/'), $originalName);
+                } catch (\Exception $e) {
+                    return response()->json(['error' => 'Error al cargar la imagen: ' . $e->getMessage()], 500);
+                }
+
+                // Actualizar el campo 'photo' en la base de datos
+                $employee->photo = $photoPath;
+            }
+
+            // Actualizamos los datos del empleado
+            $employee->update($request->only([
+                'name',
+                'surname',
+                'email',
+                'date_of_birth',
+                'gender',
+                'telephone',
+                'country',
+            ]));
+
+            // Actualizamos los datos de credenciales
+            if ($employee->users) {
+                $employee->users->update([
+                    'nif' => $request->input('nif'),
+                ]);
+            }
+
+            return response()->json($employee, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar el empleado: ' . $e->getMessage()], 500);
         }
-
-        return response()->json($employee, 200);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al actualizar el empleado: ' . $e->getMessage()], 500);
     }
-}
 
 
-public function checkNifExists($nif)
-{
-    try {
-        // Buscar un empleado con el mismo NIF en la base de datos
-        $existingEmployee = Employees::whereHas('users', function ($query) use ($nif) {
-            $query->where('nif', $nif);
-        })->first();
 
-        // Si se encuentra un empleado con el mismo NIF, devuelve true
-        if ($existingEmployee) {
-            return response()->json(true);
+    public function checkNifExists($nif)
+    {
+        try {
+            // Buscar un empleado con el mismo NIF en la base de datos
+            $existingEmployee = Employees::whereHas('users', function ($query) use ($nif) {
+                $query->where('nif', $nif);
+            })->first();
+
+            // Si se encuentra un empleado con el mismo NIF, devuelve true
+            if ($existingEmployee) {
+                return response()->json(true);
+            }
+
+            // Si no se encuentra ningún empleado con el mismo NIF, devuelve false
+            return response()->json(false);
+        } catch (\Exception $e) {
+            // Si ocurre algún error, devuelve un mensaje de error
+            return response()->json(['error' => 'Error al verificar el NIF: ' . $e->getMessage()], 500);
         }
-
-        // Si no se encuentra ningún empleado con el mismo NIF, devuelve false
-        return response()->json(false);
-    } catch (\Exception $e) {
-        // Si ocurre algún error, devuelve un mensaje de error
-        return response()->json(['error' => 'Error al verificar el NIF: ' . $e->getMessage()], 500);
     }
-}
 
     // Método para eliminar un empleado
     public function delete($id)
