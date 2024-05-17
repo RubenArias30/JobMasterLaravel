@@ -65,7 +65,7 @@ Route::get('/employees/{employeeId}/events', [ScheduleController::class, 'index'
 Route::get('/events/{id}', [ScheduleController::class, 'show']);
 Route::get('/schedule', [ScheduleController::class, 'showSchedule']);
 Route::put('/events/{id}', [ScheduleController::class, 'update']);
-Route::delete('/events/{id}', [ScheduleController::class, 'deleteEvent']);
+Route::delete('/schedule/{id}', [ScheduleController::class, 'deleteEvent']);
 Route::get('/employees/events', [ScheduleController::class, 'getEmployeeSchedule']);
 
 //Incidents

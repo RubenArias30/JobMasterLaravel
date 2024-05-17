@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employees;
 use App\Models\Schedule;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -102,9 +103,6 @@ class ScheduleController extends Controller
             'end_datetime' => 'required|date',
         ]);
 
-        //  // Formatea las fechas correctamente
-        // $start_datetime = date('Y-m-d H:i:s', strtotime($request->input('start_datetime')));
-        // $end_datetime = date('Y-m-d H:i:s', strtotime($request->input('end_datetime')));
         // Actualiza los datos del horario
         $schedule->title = $request->input('title');
         $schedule->start_datetime = $request->input('start_datetime');
@@ -119,12 +117,17 @@ class ScheduleController extends Controller
 
 
     public function deleteEvent($id)
-    {
-        $event = Schedule::find($id);
-        if (!$event) {
-            return response()->json(['error' => 'Evento no encontrado'], 404);
-        }
-        $event->delete();
-        return response()->json(['message' => 'Evento eliminado correctamente']);
+{
+    try {
+        $event = Schedule::findOrFail($id); // Buscar el evento por su ID
+        $event->delete(); // Eliminar el evento
+
+        return response()->json(['message' => 'Evento eliminado correctamente'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al eliminar el evento'], 500);
     }
+}
+
+
+
 }
