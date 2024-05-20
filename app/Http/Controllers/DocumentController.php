@@ -7,6 +7,9 @@ use App\Models\Employees;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DocumentController extends Controller
 {
@@ -45,28 +48,33 @@ public function myDocuments()
 }
 
 
-    public function store(Request $request, $employeeId)
-    {
-        // Valida los datos del formulario
-        $validatedData = $request->validate([
-            'type_documents' => 'required',
-            'name' => 'required',
-            'description' => 'required',
-            'date' => 'required|date',
-            'route' => 'required',
-        ]);
+public function store(Request $request, $employeeId)
+{
+    // Validate the incoming request
+    $validatedData = $request->validate([
+        'type_documents' => 'required|string',
+        'name' => 'required|string',
+        'description' => 'required|string',
+        'date' => 'required|date',
+        'file' => 'required|file|mimes:pdf,doc,docx|max:2048',
+    ]);
 
-        // Encuentra el empleado por su ID
-        $employee = Employees::findOrFail($employeeId);
+    // Find the employee by ID
+    $employee = Employees::findOrFail($employeeId);
 
-        // Crea un nuevo documento asociado al empleado
-        $document = new Documents($validatedData);
-        $employee->documents()->save($document);
-
-        // Retorna el documento recién creado
-        return response()->json($document, 201);
+    // Handle the file upload
+    if ($request->hasFile('file')) {
+        $filePath = $request->file('file')->store('documents', 'public');
+        $validatedData['route'] = $filePath;
     }
 
+    // Create a new document associated with the employee
+    $document = new Documents($validatedData);
+    $employee->documents()->save($document);
+
+    // Return the newly created document
+    return response()->json($document, 201);
+}
     // Método para eliminar un documento por su ID
     public function destroy($id)
     {
@@ -86,4 +94,23 @@ public function myDocuments()
 
         return response()->json(['message' => 'Documento eliminado correctamente']);
     }
+
+    public function download($documentId)
+{
+    // Find the document by ID
+    $document = Documents::findOrFail($documentId);
+
+    // Get the file path from the route field
+    $filePath = $document->route;
+
+    // Check if the file exists in storage
+    if (Storage::disk('public')->exists($filePath)) {
+        // If the file exists, return it as a download
+        return response()->download(storage_path('app/public/' . $filePath));
+    }
+
+    // If the file doesn't exist, handle the error accordingly
+    // Here, I'm returning a response with a JSON message, but you might want to adjust this
+    return response()->json(['message' => 'File not found'], 404);
+}
 }

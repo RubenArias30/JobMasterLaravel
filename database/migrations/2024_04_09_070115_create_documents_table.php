@@ -13,17 +13,15 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->enum('type_documents',['contracts','nif','curriculum','laboral_life','payroll','proof'])->nullable();
+            $table->enum('type_documents', ['contracts', 'nif', 'curriculum', 'laboral_life', 'payroll', 'proof'])->nullable();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->date('date')->nullable();
-            $table->string('route')->nullable();
+            $table->string('route')->nullable(); // This will store the file path
 
             $table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');
 
             $table->timestamps();
-
-
         });
     }
 
