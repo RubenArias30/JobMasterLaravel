@@ -60,6 +60,7 @@ Route::get('/documents/{employeeId}', [DocumentController::class, 'index']);
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy']);
 Route::post('employees/{employee}/documents', [DocumentController::class, 'store']);
 Route::get('/my-documents', [DocumentController::class, 'myDocuments']);
+Route::get('documents/download/{documentId}', [DocumentController::class, 'download']);
 
 //Schedule
 Route::post('/employees/{id}/schedule', [ScheduleController::class, 'store']);
