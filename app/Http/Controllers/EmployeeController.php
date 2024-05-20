@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
@@ -85,82 +86,76 @@ class EmployeeController extends Controller
 
 
     public function update(Request $request, $id)
-{
-    try {
-        // Buscamos al empleado por su ID
-        $employee = Employees::find($id);
+    {
+        try {
+            // Buscamos al empleado por su ID
+            $employee = Employees::find($id);
 
-        // Verificamos si el empleado existe
-        if (!$employee) {
-            return response()->json(['message' => 'Empleado no encontrado'], 404);
-        }
-
-        // Validar los datos de entrada antes de actualizar
-        $request->validate([
-            'name' => 'required|string',
-            'surname' => 'required|string',
-            'email' => 'required|email',
-            'date_of_birth' => 'required|date',
-            'gender' => 'required|string',
-            'telephone' => 'required|string',
-            'country' => 'required|string',
-            'street' => 'required|string',
-            'city' => 'required|string',
-            'postal_code' => 'required',
-            'nif' => 'required|string',
-        ]);
-
-        // Actualizamos los datos del empleado
-        $employee->update($request->only([
-            'name',
-            'surname',
-            'email',
-            'date_of_birth',
-            'gender',
-            'telephone',
-            'country',
-        ]));
-
-        // Actualizar la imagen del empleado si se proporciona una nueva
-        if ($request->hasFile('photo')) {
-            // Eliminamos la foto anterior si existe
-            if ($employee->photo) {
-                // Eliminamos la imagen anterior
-                $previousPhotoPath = public_path($employee->photo);
-                if (file_exists($previousPhotoPath)) {
-                    unlink($previousPhotoPath);
-                }
+            // Verificamos si el empleado existe
+            if (!$employee) {
+                return response()->json(['message' => 'Empleado no encontrado'], 404);
             }
 
-            // Subimos la nueva foto
-            $file = $request->file('photo');
-            $originalName = $file->getClientOriginalName();
-            $photoPath = 'img/employees/' . $originalName;
-            $file->move(public_path('img/employees'), $originalName);
-
-            // Actualizamos el campo 'photo' en la base de datos
-            $employee->photo = $photoPath;
-        }
-
-         // Actualizar la dirección del empleado
-         $employee->addresses->update([
-            'street' => $request->input('street'),
-            'city' => $request->input('city'),
-            'postal_code' => strlen($request->input('postal_code')) === 4 ? '0' . $request->input('postal_code') : $request->input('postal_code'),
-        ]);
-
-        // Actualizamos los datos de credenciales
-        if ($employee->users) {
-            $employee->users->update([
-                'nif' => $request->input('nif'),
+            // Validar los datos de entrada antes de actualizar
+            $request->validate([
+                'name' => 'required|string',
+                'surname' => 'required|string',
+                'email' => 'required|email',
+                'date_of_birth' => 'required|date',
+                'gender' => 'required|string',
+                'telephone' => 'required|string',
+                'country' => 'required|string',
+                'street' => 'required|string',
+                'city' => 'required|string',
+                'postal_code' => 'required',
+                'nif' => 'required|string',
             ]);
-        }
 
-        return response()->json($employee, 200);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al actualizar el empleado: ' . $e->getMessage()], 500);
+            // Actualizamos los datos del empleado
+            $employee->update($request->only([
+                'name',
+                'surname',
+                'email',
+                'date_of_birth',
+                'gender',
+                'telephone',
+                'country',
+            ]));
+
+            // Actualizar la imagen del empleado si se proporciona una nueva
+            if ($request->hasFile('photo')) {
+                // Eliminamos la foto anterior si existe
+                if ($employee->photo) {
+                    Storage::delete($employee->photo);
+                }
+
+                // Subimos la nueva foto
+                $photoPath = $request->file('photo')->store('img/employees');
+
+                // Actualizamos el campo 'photo' en la base de datos
+                $employee->photo = $photoPath;
+            }
+
+            // Actualizar la dirección del empleado
+            $employee->addresses->update([
+                'street' => $request->input('street'),
+                'city' => $request->input('city'),
+                'postal_code' => strlen($request->input('postal_code')) === 4 ? '0' . $request->input('postal_code') : $request->input('postal_code'),
+            ]);
+
+            // Actualizamos los datos de credenciales
+            if ($employee->users) {
+                $employee->users->update([
+                    'nif' => $request->input('nif'),
+                ]);
+            }
+
+            return response()->json($employee, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar el empleado: ' . $e->getMessage()], 500);
+        }
     }
-}
+
 
 
 public function checkNifExists($nif)
