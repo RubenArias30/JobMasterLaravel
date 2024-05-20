@@ -104,6 +104,9 @@ class EmployeeController extends Controller
             'gender' => 'required|string',
             'telephone' => 'required|string',
             'country' => 'required|string',
+            'street' => 'required|string',
+            'city' => 'required|string',
+            'postal_code' => 'required',
             'nif' => 'required|string',
         ]);
 
@@ -138,6 +141,13 @@ class EmployeeController extends Controller
             // Actualizamos el campo 'photo' en la base de datos
             $employee->photo = $photoPath;
         }
+
+         // Actualizar la dirección del empleado
+         $employee->addresses->update([
+            'street' => $request->input('street'),
+            'city' => $request->input('city'),
+            'postal_code' => strlen($request->input('postal_code')) === 4 ? '0' . $request->input('postal_code') : $request->input('postal_code'),
+        ]);
 
         // Actualizamos los datos de credenciales
         if ($employee->users) {
