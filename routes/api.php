@@ -52,6 +52,8 @@ Route::delete('/budget/{id}', [InvoiceController::class, 'delete']);
 Route::get('/budget', [InvoiceController::class, 'index']);
 Route::post('/budget', [InvoiceController::class, 'store']);
 Route::put('/budget/{id}', [InvoiceController::class, 'update']);
+Route::get('/budget/{id}', [InvoiceController::class, 'show']);
+
 
 //DOCUMENT
 Route::get('/documents/{employeeId}', [DocumentController::class, 'index']);
