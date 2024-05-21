@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Employees;
@@ -25,7 +26,6 @@ class AttendancesController extends Controller
         // Configurar los datos del nuevo registro
         $attendance->date = now()->toDateString(); // Obtener la fecha actual
         $attendance->start_time = now()->toTimeString(); // Obtener la hora actual
-        $attendance->current_time = now()->toTimeString(); // Guardar el tiempo actual como current_time
         $attendance->employees_id = $userId; // Asignar el ID del usuario autenticado como el ID del empleado
         $attendance->status = 'present'; // Actualiza el estado del empleado como "presente"
 
@@ -49,11 +49,19 @@ class AttendancesController extends Controller
             return response()->json(['error' => 'No se encontró un registro de asistencia para este usuario'], 404);
         }
 
-        // Actualizar el registro de asistencia con la hora de salida solo si aún no se ha registrado
+        // Actualizar el registro de asistencia con la hora de salida y el tiempo total transcurrido
         if (!$attendance->end_time) {
             $attendance->end_time = now()->toTimeString();
+
+            // Calcula el tiempo total transcurrido
+            $startTime = \Carbon\Carbon::parse($attendance->start_time);
+            $endTime = \Carbon\Carbon::parse($attendance->end_time);
+            $totalTime = $endTime->diff($startTime)->format('%H:%I:%S');
+
+            $attendance->total_time = $totalTime;
             $attendance->status = 'finalized';
             $attendance->save();
+
             return response()->json(['message' => 'Salida registrada correctamente'], 200);
         } else {
             return response()->json(['error' => 'El usuario ya ha registrado la salida anteriormente'], 400);
@@ -85,6 +93,32 @@ class AttendancesController extends Controller
             'inactive_employee_count' => $inactiveEmployeeCount
         ]);
     }
+    public function getLastExitDate(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['error' => 'User not authenticated'], 401);
+            }
+
+            $userId = $user->id;
+
+            $lastExitDate = Attendance::where('employees_id', $userId)
+                ->whereNotNull('end_time')
+                ->orderByDesc('created_at')
+                ->value('end_time');
+
+            if ($lastExitDate) {
+                $lastExitDateFormatted = Carbon::parse($lastExitDate)->toISOString();
+                return response()->json(['lastExitDate' => $lastExitDateFormatted], 200);
+            } else {
+                return response()->json(['lastExitDate' => null], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error fetching last exit date'], 500);
+        }
+    }
+
 
 
 }
