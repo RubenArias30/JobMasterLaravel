@@ -84,6 +84,7 @@ Route::put('/incidents/{id}/status', [IncidentController::class, 'updateStatus']
 Route::post('/attendances/entry', [AttendancesController::class, 'registerEntry']);
 Route::post('/attendances/exit', [AttendancesController::class, 'registerExit']);
 Route::get('/employee-status', [AttendancesController::class, 'getEmployeeStatus']);
+Route::get('/lastExitDate', [AttendancesController::class, 'getLastExitDate']);
 
 
 //My Profile(employees)
