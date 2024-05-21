@@ -46,6 +46,8 @@ Route::delete('/employees/{id}', [EmployeeController::class, 'delete']);
 Route::get('/employees/{id}', [EmployeeController::class, 'show']);
 Route::get('/employees/checkNifExists/{nif}', [EmployeeController::class, 'checkNifExists']);
 Route::put('/employees/{id}', [EmployeeController::class, 'update']);
+Route::post('/employees/{id}/photo', [EmployeeController::class, 'updatePhoto']);
+
 
 //BUDGET
 Route::delete('/budget/{id}', [InvoiceController::class, 'delete']);
