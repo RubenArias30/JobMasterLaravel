@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('type_absence');
+            $table->enum('type_absence', ['vacation','sick_leave','maternity/paternity','compensatory','leave','others']);
             $table->string('motive');
 
             $table->foreignId('employees_id')->constrained('employees')->onDelete('cascade');

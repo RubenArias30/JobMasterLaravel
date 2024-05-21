@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->enum('type_documents', ['contracts', 'nif', 'curriculum', 'laboral_life', 'payroll', 'proof'])->nullable();
+            $table->enum('type_documents', ['contracts', 'nif', 'curriculum', 'laboral_life', 'payroll', 'proof','others'])->nullable();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->date('date')->nullable();

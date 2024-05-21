@@ -18,7 +18,7 @@ class DocumentsFactory extends Factory
     public function definition(): array
     {
         return [
-            'type_documents' => $this->faker->randomElement(['contracts', 'nif', 'curriculum', 'laboral_life', 'payroll', 'proof']),
+            'type_documents' => $this->faker->randomElement(['contracts', 'nif', 'curriculum', 'laboral_life', 'payroll', 'proof','others']),
             'name' => $this->faker->word,
             'description' => $this->faker->sentence,
             'date' => $this->faker->date(),

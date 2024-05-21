@@ -93,4 +93,4 @@ Route::post('/absences', [AbsenceController::class, 'store']);
 Route::delete('//absences/{id}', [AbsenceController::class, 'destroy']);
 Route::put('/absences/{id}', [AbsenceController::class, 'update']); // Update an existing absence
 Route::get('/absences/{id}', [AbsenceController::class, 'show']);
-
+Route::get('/absences/employee/{id}', [AbsenceController::class, 'FilterAbsencesByEmployee']);

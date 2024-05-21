@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absences;
+use App\Models\Employees;
 
 use Illuminate\Http\Request;
 
@@ -106,6 +107,15 @@ class AbsenceController extends Controller
     }
 
 
+    public function FilterAbsencesByEmployee($employeeId)
+    {
+        // Obtener las ausencias del empleado especificado
+        $absences = Absences::with('employee', 'user')
+            ->where('employees_id', $employeeId)
+            ->get();
+
+        return response()->json($absences);
+    }
 
 
 }
