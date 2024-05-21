@@ -17,26 +17,10 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'nif' => $this->generateNif(),
+            'nif' => $this->generateDni(),
             'password' => bcrypt('password123'),
             'roles' => 'empleado',
         ];
-    }
-
-     /**
-     * Genera un DNI o NIE español válido.
-     *
-     * @return string
-     */
-    private function generateNif(): string
-    {
-        $nifTypes = ['DNI', 'NIE'];
-        $nifType = $nifTypes[rand(0, 1)];
-        if ($nifType === 'DNI') {
-            return $this->generateDni();
-        } else {
-            return $this->generateNie();
-        }
     }
 
     /**
@@ -53,23 +37,5 @@ class UserFactory extends Factory
         $letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
         $dni .= $letters[$dni % 23];
         return $dni;
-    }
-
-    /**
-     * Genera un NIE español válido.
-     *
-     * @return string
-     */
-    private function generateNie(): string
-    {
-        $nieTypes = ['X', 'Y', 'Z'];
-        $nieType = $nieTypes[rand(0, 2)];
-        $nieNumber = '';
-        for ($i = 0; $i < 7; $i++) {
-            $nieNumber .= rand(0, 9);
-        }
-        $nieLetters = 'TRWAGMYFPDXBNJZSQVHLCKE';
-        $nie = $nieType . $nieNumber . $nieLetters[$nieNumber % 23];
-        return $nie;
     }
 }

@@ -20,7 +20,7 @@ class ClientFactory extends Factory
         return [
             'client_name' => $this->faker->company,
             'client_telephone' => $this->generatePhoneNumber(),
-            'client_nif' => $this->generateNif(),
+            'client_nif' => $this->generateDni(),
             'client_email' => $this->faker->unique()->safeEmail,
             'client_street' => $this->faker->streetName,
             'client_city' => $this->faker->city,
@@ -42,21 +42,7 @@ class ClientFactory extends Factory
         return $prefix . $digits;
     }
 
-     /**
-     * Genera un DNI o NIE español válido.
-     *
-     * @return string
-     */
-    private function generateNif(): string
-    {
-        $nifTypes = ['DNI', 'NIE'];
-        $nifType = $nifTypes[rand(0, 1)];
-        if ($nifType === 'DNI') {
-            return $this->generateDni();
-        } else {
-            return $this->generateNie();
-        }
-    }
+
 
     /**
      * Genera un DNI español válido.
@@ -74,21 +60,4 @@ class ClientFactory extends Factory
         return $dni;
     }
 
-    /**
-     * Genera un NIE español válido.
-     *
-     * @return string
-     */
-    private function generateNie(): string
-    {
-        $nieTypes = ['X', 'Y', 'Z'];
-        $nieType = $nieTypes[rand(0, 2)];
-        $nieNumber = '';
-        for ($i = 0; $i < 7; $i++) {
-            $nieNumber .= rand(0, 9);
-        }
-        $nieLetters = 'TRWAGMYFPDXBNJZSQVHLCKE';
-        $nie = $nieType . $nieNumber . $nieLetters[$nieNumber % 23];
-        return $nie;
-    }
 }
