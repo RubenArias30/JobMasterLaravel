@@ -56,7 +56,7 @@ public function store(Request $request, $employeeId)
         'name' => 'required|string',
         'description' => 'required|string',
         'date' => 'required|date',
-        'file' => 'required|file|mimes:pdf,doc,docx|max:2048',
+        'file' => 'required|file|mimes:pdf,doc,docx',
     ]);
 
     // Find the employee by ID
