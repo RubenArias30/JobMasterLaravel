@@ -1,2 +1,6 @@
-*
-!.gitignore
+*.env
+.editorconfig
+.gitattributes
+# You can add more specific patterns here, like:
+composer.lock
+package-lock.json
