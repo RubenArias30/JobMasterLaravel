@@ -9,20 +9,23 @@ use Illuminate\Http\Request;
 
 class AbsenceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        // Obtener las ausencias excluyendo aquellas asociadas al employee_id igual a 1
-        $absences = Absences::with('employee', 'user')
-            ->whereHas('employee', function ($query) {
-                $query->where('id', '!=', 1);
-            })
-            ->get();
+public function index(Request $request)
+{
+  $type = $request->query('type');
 
-        return response()->json($absences);
-    }
+  $query = Absences::with('employee', 'user')
+      ->whereHas('employee', function ($query) {
+          $query->where('id', '!=', 1);
+      });
+
+  if ($type) {
+      $query->where('type_absence', $type);
+  }
+
+  $absences = $query->get();
+
+  return response()->json($absences);
+}
 
 
     public function store(Request $request)
@@ -107,15 +110,7 @@ class AbsenceController extends Controller
     }
 
 
-    public function FilterAbsencesByEmployee($employeeId)
-    {
-        // Obtener las ausencias del empleado especificado
-        $absences = Absences::with('employee', 'user')
-            ->where('employees_id', $employeeId)
-            ->get();
-
-        return response()->json($absences);
-    }
+    
 
 
 }
