@@ -1,4 +1,9 @@
+# .gitignore
+
+# Ignorar archivos de entorno
 .env
+
+# Otros archivos y directorios que deseas ignorar
 /.phpunit.cache
 /node_modules
 /public/build
