@@ -11,6 +11,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/logs/laravel.log
 .env.backup
 .env.production
 .env.example
