@@ -1,3 +1,9 @@
+# .gitignore
+
+# Ignorar archivos de entorno
+.env
+
+# Otros archivos y directorios que deseas ignorar
 /.phpunit.cache
 /node_modules
 /public/build
@@ -5,10 +11,10 @@
 /public/storage
 /storage/*.key
 /vendor
-.env
-.env.example
+/logs/laravel.log
 .env.backup
 .env.production
+.env.example
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml

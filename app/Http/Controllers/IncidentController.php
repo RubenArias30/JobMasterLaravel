@@ -24,7 +24,7 @@ class IncidentController extends Controller
         // Validar los datos de la solicitud
         $request->validate([
             'incident_type' => 'required|string',
-            'description' => 'required|string',
+            'description' => 'required|string|max:300',
             'date' => 'required|date',
         ]);
 
