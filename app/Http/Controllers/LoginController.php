@@ -15,19 +15,19 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        // Aplicar middleware de autenticación JWT a todas las rutas excepto 'login'
+        // Apply JWT authentication middleware to all routes except 'login'
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
     /**
-     * Inicia sesión y devuelve el token JWT.
+     * Log in and return the JWT token.
      */
     public function login()
     {
         $credentials = request(['nif', 'password']);
 
         //try {
-            // Autenticar al usuario
+            // Authenticate the user
             if (! $token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'Credenciales inválidas'], 401);
             }
@@ -38,12 +38,12 @@ class LoginController extends Controller
 
 
 
-        // Responder con el token y el rol
+        // Respond with the token and role
         return $this->respondWithToken($token);
     }
 
-    /**
-     * Devuelve la información del usuario autenticado.
+  /**
+     * Returns information about the authenticated user.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -51,17 +51,17 @@ class LoginController extends Controller
     {
      $user = auth()->user();
     $employee = Employees::where('users_id', $user->id)->first();
-    // Comprueba si se encontró un registro de empleado para el usuario autenticado
+    // Check if an employee record was found for the authenticated user
     if ($employee) {
         return response()->json(['name' => $employee->name]);
     } else {
-        // Si no se encuentra un registro de empleado, devuelve el nif del usuario como nombre de usuario
+        // If no employee record is found, return the user's NIF as the username
         return response()->json(['name' => $user->nif]);
     }
     }
 
     /**
-     * Cierra la sesión del usuario (invalida el token JWT).
+     * Logs out the user (invalidates the JWT token).
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -72,8 +72,8 @@ class LoginController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
 
-    /**
-     * Refresca el token JWT.
+      /**
+     * Refreshes the JWT token.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -81,17 +81,16 @@ class LoginController extends Controller
     {
         return $this->respondWithToken(JWTAuth::refresh());
     }
-
     /**
-     * Construye la respuesta con el token JWT.
+     * Constructs the response with the JWT token.
      *
      * @param  string  $token
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respondWithToken($token)
     {
-        // Obtener el usuario autenticado
-    $user = auth()->user();
+        // Get the authenticated user
+        $user = auth()->user();
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',

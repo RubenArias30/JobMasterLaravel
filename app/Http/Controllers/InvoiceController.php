@@ -22,7 +22,7 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-        // Validar los datos
+        // Validate data
         $request->validate([
             'client_name' => 'required',
             'client_telephone' => 'required',
@@ -47,14 +47,14 @@ class InvoiceController extends Controller
 
         ]);
 
-        // Dirección
+        // ADdress
         // $address = new Address();
         // $address->street = $request->input('street');
         // $address->city = $request->input('city');
         // $address->postal_code = $request->input('postal_code');
         // $address->save();
 
-        // Compañia
+        // Company
         $company = new Company();
         $company->company_name = $request->input('company_name');
         $company->company_telephone = $request->input('company_telephone');
@@ -66,7 +66,7 @@ class InvoiceController extends Controller
 
         $company->save();
 
-        // Cliente
+        // Client
         $client = new Client();
         $client->client_name = $request->input('client_name');
         $client->client_telephone = $request->input('client_telephone');
@@ -93,7 +93,7 @@ class InvoiceController extends Controller
         $invoice->client_id = $client->id;
         $invoice->save();
 
-        //Concepto
+        //Concept
         foreach ($request->input('concepts') as $conceptData) {
             $concept = new Concept();
             $concept->concept = $conceptData['concept'];
@@ -112,20 +112,19 @@ class InvoiceController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Buscar la factura por su ID
+        // Search by ID
         $invoice = Invoices::find($id);
 
-        // Verificar si la factura existe
+        // Validate if exist
         if (!$invoice) {
             return response()->json(['message' => 'Factura no encontrada'], 404);
         }
 
-        // Validar los datos
+        // Validate data
         $request->validate([
-            // Agrega aquí las reglas de validación según tus necesidades
         ]);
 
-        // Actualizar la factura
+        //UPdate budget
         $invoice->update([
             'subtotal' => $request->subtotal,
             'invoice_discount' => $request->invoice_discount,
@@ -134,7 +133,7 @@ class InvoiceController extends Controller
             'total' => $request->total,
         ]);
 
-        // Actualizar el cliente asociado
+        // UPdate asociated client
         $client = Client::find($invoice->client_id);
         $client->update([
             'client_name' => $request->client_name,
@@ -143,7 +142,7 @@ class InvoiceController extends Controller
             'client_email' => $request->client_email,
         ]);
 
-        // Actualizar la compañía asociada
+        // UPdate asociated company
         $company = Company::find($invoice->company_id);
         $company->update([
             'company_name' => $request->company_name,
@@ -152,7 +151,7 @@ class InvoiceController extends Controller
             'company_email' => $request->company_email,
         ]);
 
-        // Actualizar la dirección asociada
+        
         // $address = Address::find($company->address_id);
         // $address->update([
         //     'street' => $request->street,
@@ -160,10 +159,10 @@ class InvoiceController extends Controller
         //     'postal_code' => $request->postal_code,
         // ]);
 
-        // Eliminar los conceptos existentes asociados a la factura
+        // Delete the existing concepts associated with the invoice.
         $invoice->concepts()->delete();
 
-        // Crear los nuevos conceptos
+        // Create new budget
         foreach ($request->input('concepts') as $conceptData) {
             $concept = new Concept();
             $concept->concept = $conceptData['concept'];
@@ -185,12 +184,12 @@ class InvoiceController extends Controller
 
         $invoice = Invoices::find($id);
 
-        // Verificar si la factura existe
+        //Verify if exists
         if (!$invoice) {
             return response()->json(['message' => 'Factura no encontrada'], 404);
         }
 
-        // Finalmente, eliminar al empleado
+        // Delete
         $invoice->delete();
 
         return response()->json(['message' => 'Factura eliminada exitosamente']);

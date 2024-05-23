@@ -18,6 +18,12 @@ use Symfony\Component\HttpFoundation\Response;
 class ResetPasswordController extends Controller
 {
 
+       /**
+     * Initiates the password reset process by sending a reset password email to the user.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function resetPasswordRequest(Request $request)
     {
         try {
@@ -34,6 +40,12 @@ class ResetPasswordController extends Controller
         }
     }
 
+        /**
+     * Sends the reset password email to the user.
+     *
+     * @param string $email
+     * @return string
+     */
     public function sendResetPasswordEmail($email)
 {
     $oldToken = DB::table('password_resets')->where('email', $email)->first();
@@ -48,7 +60,13 @@ class ResetPasswordController extends Controller
     return $token;
 }
 
-
+    /**
+     * Saves the reset password token in the database.
+     *
+     * @param string $token
+     * @param string $email
+     * @return void
+     */
     public function saveToken($token, $email){
         DB::table('password_resets')->insert([
             "email" => $email,
@@ -56,7 +74,12 @@ class ResetPasswordController extends Controller
             "created_at" => Carbon::now()
         ]);
     }
-
+   /**
+     * Resets the user's password.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function resetPassword(Request $request)
     {
        try {
@@ -76,18 +99,32 @@ class ResetPasswordController extends Controller
        }
     }
 
-
+    /**
+     * Checks if the reset password token exists in the database.
+     *
+     * @param array $request
+     * @return mixed
+     */
        public function resetPasswordTable($request)
        {
            return DB::table('password_resets')->where(['email' => $request['email'], 'token' => $request['resetToken']]);
        }
 
-
+   /**
+     * Returns a JSON response for a not found error.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
        public function NotFound(){
            return response()->json(['error' => 'Token or email incorrect']);
        }
 
-
+    /**
+     * Changes the user's password in the database.
+     *
+     * @param array $request
+     * @return \Illuminate\Http\JsonResponse
+     */
        public function changePasswordDB($request){
            $employee = Employees::whereEmail($request['email'])->first();
            $user = User::find($employee->users_id);

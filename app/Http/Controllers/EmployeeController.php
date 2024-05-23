@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
 {
+        /**
+     * Method to retrieve all employees.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index()
     {
         $employees = Employees::with('addresses', 'users')->whereHas('users', function ($query) {
@@ -21,7 +25,11 @@ class EmployeeController extends Controller
 
         return response()->json($employees);
     }
-
+    /**
+     * Method to store a new employee.
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request)
     {
         try {
@@ -46,7 +54,7 @@ class EmployeeController extends Controller
             $originalName = $file->getClientOriginalName();
             $file->move($uploadPath, $originalName);
 
-            // Crear un nuevo registro de empleado
+            // Create a new employee record
             $employee = new Employees();
             $employee->name = $request['name'];
             $employee->surname = $request['surname'];
@@ -58,7 +66,7 @@ class EmployeeController extends Controller
             //$employee->photo = 'http://jobmaster.es/img/employees/' . $originalName;
             $employee->users_id = $userId;
 
-            // Guardar los datos de dirección
+            // Save address data
             $address = new Address();
             $address->street = $request['street'];
             $address->city = $request['city'];
@@ -67,14 +75,14 @@ class EmployeeController extends Controller
 
             $employee->address_id = $address->id;
 
-            // Guardar los datos de credenciales
+            // Save credentials data
             $credentials = new User();
             $credentials->nif = $request['nif'];
             $credentials->password = bcrypt($request->input('password'));
             $credentials->roles = 'empleado';
             $credentials->save();
 
-            // Relacionar las credenciales con el empleado
+            // Associate credentials with the employee
             $employee->users_id = $credentials->id;
 
             $employee->save();
@@ -84,19 +92,24 @@ class EmployeeController extends Controller
         }
     }
 
-
+  /**
+     * Method to update employee details.
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id)
     {
         try {
-            // Buscamos al empleado por su ID
+            // Find the employee by their ID
             $employee = Employees::find($id);
 
-            // Verificamos si el empleado existe
+            // Check if the employee exists
             if (!$employee) {
                 return response()->json(['message' => 'Empleado no encontrado'], 404);
             }
 
-            // Validar los datos de entrada antes de actualizar
+            // Validate input data before updating
             $request->validate([
                 'name' => 'required|string',
                 'surname' => 'required|string',
@@ -111,7 +124,7 @@ class EmployeeController extends Controller
                 'nif' => 'required|string',
             ]);
 
-            // Actualizamos los datos del empleado
+            // Update employee data
             $employee->update($request->only([
                 'name',
                 'surname',
@@ -122,14 +135,14 @@ class EmployeeController extends Controller
                 'country',
             ]));
 
-            // Actualizar la dirección del empleado
+            // Update employee address
             $employee->addresses->update([
                 'street' => $request->input('street'),
                 'city' => $request->input('city'),
                 'postal_code' => strlen($request->input('postal_code')) === 4 ? '0' . $request->input('postal_code') : $request->input('postal_code'),
             ]);
 
-            // Actualizamos los datos de credenciales
+            // Update credentials data
             if ($employee->users) {
                 $employee->users->update([
                     'nif' => $request->input('nif'),
@@ -141,23 +154,28 @@ class EmployeeController extends Controller
             return response()->json(['error' => 'Error al actualizar el empleado: ' . $e->getMessage()], 500);
         }
     }
-
+    /**
+     * Method to update employee photo.
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updatePhoto(Request $request, $id)
     {
         try {
             $employee = Employees::findOrFail($id);
 
-            // Verificar si hay una nueva foto enviada
+            // Check if a new photo is sent
             if ($request->hasFile('photo')) {
                 $photo = $request->file('photo');
                 $extension = $photo->getClientOriginalExtension();
 
-                // Validar que el archivo sea una imagen
+                // Validate that the file is an image
                 if (!in_array($extension, ['png', 'jpg', 'jpeg'])) {
                     throw new \Exception('El archivo no es una imagen válida. La foto existente se mantendrá.');
                 }
 
-                // Eliminar la foto existente
+                // Delete the existing photo
                 if ($employee->photo) {
                     $existingPhotoPath = public_path('img/employees/') . basename($employee->photo);
                     if (file_exists($existingPhotoPath)) {
@@ -165,7 +183,7 @@ class EmployeeController extends Controller
                     }
                 }
 
-                // Mover la nueva foto al directorio de imágenes
+                // Move the new photo to the images directory
                 $fileName = 'employee_' . $id . '.' . $extension;
                 $photo->move(public_path('img/employees'), $fileName);
                 $employee->photo = 'http://localhost:8000/img/employees/' . $fileName . '?timestamp=' . now()->timestamp;
@@ -178,52 +196,60 @@ class EmployeeController extends Controller
         }
     }
 
-
+ /**
+     * Method to check if a NIF already exists.
+     * @param string $nif
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function checkNifExists($nif)
     {
         try {
-            // Buscar un empleado con el mismo NIF en la base de datos
+            // Search for an employee with the same NIF in the database
             $existingEmployee = Employees::whereHas('users', function ($query) use ($nif) {
                 $query->where('nif', $nif);
             })->first();
 
-            // Si se encuentra un empleado con el mismo NIF, devuelve true
+            // If an employee with the same NIF is found, return true
             if ($existingEmployee) {
                 return response()->json(true);
             }
 
-            // Si no se encuentra ningún empleado con el mismo NIF, devuelve false
+            // If no employee with the same NIF is found, return false
             return response()->json(false);
         } catch (\Exception $e) {
-            // Si ocurre algún error, devuelve un mensaje de error
+            // If an error occurs, return an error message
             return response()->json(['error' => 'Error al verificar el NIF: ' . $e->getMessage()], 500);
         }
     }
 
-    // Método para eliminar un empleado
+   /**
+     * Method to delete an employee.
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete($id)
     {
-        // Buscar al empleado por su ID
+        // Find the employee by their ID
         $employee = Employees::find($id);
 
-        // Verificar si el empleado existe
+        // Check if the employee exists
         if (!$employee) {
             return response()->json(['message' => 'Empleado no encontrado'], 404);
         }
 
-        // Verificar si existen registros relacionados en la tabla users
+        // Check if there are related records in the users table
         if ($employee->user) {
-            // Si hay un usuario relacionado, eliminarlo
+            // If there is a related user, delete it
             $employee->user()->delete();
         }
 
-        // Verificar si existen registros relacionados en la tabla addresses
+        // Check if there are related records in the addresses table
         if ($employee->address) {
-            // Si hay una dirección relacionada, eliminarla
+            // If there is a related address, delete it
             $employee->address()->delete();
         }
 
-        // Finalmente, eliminar al empleado
+        // Finally, delete the employee
         $employee->delete();
 
         return response()->json(['message' => 'Empleado eliminado exitosamente']);

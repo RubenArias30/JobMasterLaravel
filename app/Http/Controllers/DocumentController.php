@@ -18,36 +18,49 @@ class DocumentController extends Controller
     {
         $this->middleware('auth:api');
     }
-    // Método para obtener todos los documentos
+
+        /**
+     * Method to get all documents associated with an employee.
+     * @param Request $request
+     * @param int $employeeId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request, $employeeId)
     {
-        // Encuentra el empleado por su ID
+        // Find the employee by their ID
         $employee = Employees::findOrFail($employeeId);
 
-        // Obtén los documentos asociados al empleado
+        // Get the documents associated with the employee
         $documents = $employee->documents;
 
         return response()->json($documents);
     }
 
-    // Método para obtener los documentos del empleado autenticado
-public function myDocuments()
+   /**
+     * Method to get documents of the authenticated employee.
+     * @return \Illuminate\Http\JsonResponse
+     */public function myDocuments()
 {
-    // Obtenemos el empleado autenticado
-    $employee = Auth::user()->id;
+        // Get the authenticated employee
+        $employee = Auth::user()->id;
 
-    // Verificamos si el empleado existe
-    if (!$employee) {
+        // Check if the employee exists
+        if (!$employee) {
         return response()->json(['message' => 'Empleado no encontrado'], 404);
     }
 
-    // Obtenemos los documentos asociados al empleado logeuado
-    $documents = Documents::where('employees_id', $employee)->get();
+        // Get the documents associated with the logged-in employee
+        $documents = Documents::where('employees_id', $employee)->get();
 
     return response()->json($documents);
 }
 
-
+  /**
+     * Method to store a new document associated with an employee.
+     * @param Request $request
+     * @param int $employeeId
+     * @return \Illuminate\Http\JsonResponse
+     */
 public function store(Request $request, $employeeId)
 {
     // Validate the incoming request
@@ -75,26 +88,36 @@ public function store(Request $request, $employeeId)
     // Return the newly created document
     return response()->json($document, 201);
 }
-    // Método para eliminar un documento por su ID
-    public function destroy($id)
+
+   /**
+     * Method to delete a document by its ID.
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */  
+      public function destroy($id)
     {
-        // Busca el documento por su ID
+        // Find the document by its ID
         $document = Documents::find($id);
 
-        // Verifica si el documento existe
+        // Check if the document exists
         if (!$document) {
             return response()->json(['message' => 'Documento no encontrado'], 404);
         }
 
-        // Obtén el ID del empleado asociado al documento
+        // Get the ID of the employee associated with the document
         $employeeId = $document->employees_id;
 
-        // Elimina el documento de la base de datos
+        // Delete the document from the database
         $document->delete();
 
         return response()->json(['message' => 'Documento eliminado correctamente']);
     }
 
+    /**
+     * Method to download a document by its ID.
+     * @param int $documentId
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Illuminate\Http\JsonResponse
+     */
     public function download($documentId)
 {
     // Find the document by ID

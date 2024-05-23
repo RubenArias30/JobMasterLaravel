@@ -16,6 +16,12 @@ class ScheduleController extends Controller
         $this->middleware('auth:api');
     }
 
+       /**
+     * Display a listing of the schedules for a specific employee.
+     *
+     * @param  int  $employeeId
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index($employeeId)
     {
         $employee = Employees::find($employeeId);
@@ -29,17 +35,23 @@ class ScheduleController extends Controller
         return response()->json($schedules, 200);
     }
 
-
+   /**
+     * Store a newly created schedule for the specified employee.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function store(Request $request, $id)
     {
-        // Encuentra al empleado
+        // Find the employee
         $employee = Employees::find($id);
 
         if (!$employee) {
             return response()->json(['error' => 'Empleado no encontrado'], 404);
         }
 
-        // Valida los datos
+        // Validate the data
         $request->validate([
             'title' => 'required',
             'start_datetime' => 'required',
@@ -47,19 +59,25 @@ class ScheduleController extends Controller
         ]);
 
 
-        // Crea el horario
+        // Create the schedule
         $schedule = new Schedule([
             'title' => $request->title,
             'start_datetime' => $request->start_datetime,
             'end_datetime' => $request->end_datetime,
         ]);
 
-        // Asocia el horario con el empleado
+        // Associate the schedule with the employee
         $employee->schedules()->save($schedule);
 
         return response()->json($schedule, 201);
     }
 
+        /**
+     * Display the specified schedule.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($id)
     {
         $event = Schedule::find($id);
@@ -68,59 +86,76 @@ class ScheduleController extends Controller
         }
         return response()->json($event);
     }
-
+    /**
+     * Show the schedule of the authenticated employee.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function showSchedule(Request $request)
     {
-        // Obtener el empleado autenticado
+        // Get the authenticated employee
         $employeeId = $request->user()->id;
 
-        // Verificar si el empleado existe
+        // Check if the employee exists
         if (!$employeeId) {
             return response()->json(['error' => 'Empleado no encontrado'], 404);
         }
 
-        // Obtener los horarios del empleado
+        // Get the schedules of the employee
         $schedule = Schedule::where('employees_id', $employeeId)->get();
 
         return response()->json($schedule);
     }
 
+       /**
+     * Update the specified schedule in the storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id)
     {
 
-        // Encuentra el horario por su ID
+        // Find the schedule by its ID
         $schedule = Schedule::find($id);
 
-        // Verifica si el horario existe
+        // Check if the schedule exists
         if (!$schedule) {
             return response()->json(['message' => 'Horario no encontrado'], 404);
         }
 
-        // Valida los datos del formulario
+        // Validate the form data
         $request->validate([
             'title' => 'required',
             'start_datetime' => 'required|date',
             'end_datetime' => 'required|date',
         ]);
 
-        // Actualiza los datos del horario
+        // Update the schedule data
         $schedule->title = $request->input('title');
         $schedule->start_datetime = $request->input('start_datetime');
         $schedule->end_datetime = $request->input('end_datetime');
 
-        // Guarda los cambios en la base de datos
+        // Save the changes to the database
         $schedule->save();
 
-        // Devuelve una respuesta JSON con un mensaje de éxito y los datos del horario actualizados
+        // Return a JSON response with a success message and the updated schedule data
         return response()->json(['message' => 'Horario actualizado correctamente', 'schedule' => $schedule], 200);
     }
 
-
+    /**
+     * Remove the specified event from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteEvent($id)
 {
     try {
-        $event = Schedule::findOrFail($id); // Buscar el evento por su ID
-        $event->delete(); // Eliminar el evento
+        $event = Schedule::findOrFail($id); // Find the event by its ID
+        $event->delete(); // Delete the event
 
         return response()->json(['message' => 'Evento eliminado correctamente'], 200);
     } catch (\Exception $e) {

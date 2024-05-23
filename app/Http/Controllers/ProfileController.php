@@ -16,26 +16,25 @@ class ProfileController extends Controller
     public function getProfile(Request $request)
     {
         try {
-            // Obtener el ID del usuario autenticado
+            // Get the ID of the authenticated user
             $userId = Auth::user()->id;
 
-                // Buscar el perfil del empleado asociado al usuario autenticado
-        // Buscar el perfil del empleado asociado al usuario autenticado
+        // Find the profile of the employee associated with the authenticated user
         $employee = Employees::where('users_id', $userId)
             ->with(['addresses', 'users']) // Cargar datos de las relaciones
             ->first();
 
             return response()->json($employee);
-            // // Verificar si se encontró el perfil del empleado
+            // // Check if the employee profile was found
             // if ($employee) {
-            //     // Si se encontró, devolver los datos del perfil del empleado
+            //     // If found, return the employee profile data
             //     return response()->json(['success' => true, 'profile' => $employee]);
             // } else {
-            //     // Si no se encontró el perfil, retornar un mensaje de error
+            //     // If the profile was not found, return an error message
             //     return response()->json(['success' => false, 'message' => 'Perfil de empleado no encontrado'], 404);
             // }
         } catch (\Exception $e) {
-            // Manejar cualquier excepción que pueda ocurrir
+            // Handle any exceptions that may occur
             return response()->json(['success' => false, 'message' => 'Ha ocurrido un error al obtener el perfil del empleado'], 500);
         }
     }

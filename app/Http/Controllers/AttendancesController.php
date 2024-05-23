@@ -15,45 +15,56 @@ class AttendancesController extends Controller
     {
         $this->middleware('auth:api');
     }
+      /**
+     * Register entry for an employee.
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function registerEntry(Request $request)
     {
-        // Obtiene el ID del usuario autenticado
+        // Get the ID of the authenticated user
         $userId = auth()->user()->id;
 
-        // Crear un nuevo registro de asistencia
+        // Create a new attendance record
         $attendance = new Attendance();
 
-        // Configurar los datos del nuevo registro
-        $attendance->date = now()->toDateString(); // Obtener la fecha actual
-        $attendance->start_time = now()->toTimeString(); // Obtener la hora actual
-        $attendance->employees_id = $userId; // Asignar el ID del usuario autenticado como el ID del empleado
-        $attendance->status = 'present'; // Actualiza el estado del empleado como "presente"
+        // Set up the data for the new record
+        $attendance->date = now()->toDateString(); 
+        $attendance->start_time = now()->toTimeString(); 
+        $attendance->employees_id = $userId; 
+        $attendance->status = 'present'; 
 
-        // Guardar el nuevo registro en la base de datos
+        // Save the new record to the database
         $attendance->save();
 
-        // Retorna una respuesta de éxito con código 201 (Created)
+        // Return a success response with status code 201 
         return response()->json(['message' => 'Entrada registrada correctamente como presente'], 201);
     }
 
+
+    /**
+     * Register exit for an employee.
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function registerExit(Request $request)
     {
-        // Obtener el ID del usuario autenticado
+        // Get the ID of the authenticated user
         $userId = auth()->user()->id;
 
-        // Buscar el registro de asistencia más reciente del usuario autenticado
+        // Find the most recent attendance record for the authenticated user
         $attendance = Attendance::where('employees_id', $userId)->latest()->first();
 
-        // Si no se encuentra un registro de asistencia para el usuario autenticado, retornar un mensaje de error
+        // If no attendance record is found for the authenticated user, return an error message
         if (!$attendance) {
             return response()->json(['error' => 'No se encontró un registro de asistencia para este usuario'], 404);
         }
 
-        // Actualizar el registro de asistencia con la hora de salida y el tiempo total transcurrido
+        // Update the attendance record with the exit time and total elapsed time
         if (!$attendance->end_time) {
             $attendance->end_time = now()->toTimeString();
 
-            // Calcula el tiempo total transcurrido
+            // Calculate the total elapsed time
             $startTime = \Carbon\Carbon::parse($attendance->start_time);
             $endTime = \Carbon\Carbon::parse($attendance->end_time);
             $totalTime = $endTime->diff($startTime)->format('%H:%I:%S');
@@ -67,25 +78,28 @@ class AttendancesController extends Controller
             return response()->json(['error' => 'El usuario ya ha registrado la salida anteriormente'], 400);
         }
     }
-
+    /**
+     * Get the status of employees.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getEmployeeStatus()
     {
-        // Obtener el ID de todos los empleados
+        // Get the IDs of all employees
         $employeeIds = Employees::pluck('id');
 
-        // Filtrar el ID del administrador para excluirlo
+        // Filter out the admin ID to exclude it
         $adminId = 1;
         $employeeIds = $employeeIds->reject(function ($employeeId) use ($adminId) {
             return $employeeId === $adminId;
         });
 
-        // Obtener el ID de los empleados con al menos una asistencia presente
+        // Get the IDs of employees with at least one present attendance
         $presentEmployeeIds = Attendance::whereIn('employees_id', $employeeIds)
             ->where('status', 'present')
             ->distinct()
             ->pluck('employees_id');
 
-        // Calcular el número de empleados inactivos
+        // Calculate the number of inactive employees
         $inactiveEmployeeCount = count($employeeIds) - count($presentEmployeeIds);
 
         return response()->json([
@@ -93,6 +107,11 @@ class AttendancesController extends Controller
             'inactive_employee_count' => $inactiveEmployeeCount
         ]);
     }
+        /**
+     * Get the last exit date for the authenticated user.
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getLastExitDate(Request $request)
     {
         try {
