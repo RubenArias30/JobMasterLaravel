@@ -187,8 +187,8 @@ class EmployeeController extends Controller
                 // Move the new photo to the images directory
                 $fileName = 'employee_' . $id . '.' . $extension;
                 $photo->move(public_path('img/employees'), $fileName);
-                $employee->photo = 'http://localhost:8000/img/employees/' . $fileName . '?timestamp=' . now()->timestamp;
-                // $employee->photo = 'https://jobmaster.es/img/employees/' . $fileName . '?timestamp=' . now()->timestamp;
+                // $employee->photo = 'http://localhost:8000/img/employees/' . $fileName . '?timestamp=' . now()->timestamp;
+                $employee->photo = 'https://jobmaster.es/img/employees/' . $fileName . '?timestamp=' . now()->timestamp;
                 $employee->save();
             }
 
