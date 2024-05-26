@@ -238,9 +238,9 @@ class EmployeeController extends Controller
         }
 
         // Check if there are related records in the users table
-        if ($employee->user) {
+        if ($employee->users) {
             // If there is a related user, delete it
-            $employee->user()->delete();
+            $employee->users()->delete();
         }
 
         // Check if there are related records in the addresses table
