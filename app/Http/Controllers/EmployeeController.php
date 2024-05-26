@@ -50,7 +50,8 @@ class EmployeeController extends Controller
             ]);
 
             $file = $request->file('photo');
-            $uploadPath = "img/employees/";
+            // $uploadPath = "img/employees/";
+            $uploadPath = "assets/employees/";
             $originalName = $file->getClientOriginalName();
             $file->move($uploadPath, $originalName);
 
