@@ -62,8 +62,9 @@ class EmployeeController extends Controller
             $employee->date_of_birth = $request['date_of_birth'];
             $employee->telephone = $request['telephone'];
             $employee->country = $request['country'];
-            $employee->photo = 'http://localhost:8000/img/employees/' . $originalName;
+            // $employee->photo = 'http://localhost:8000/img/employees/' . $originalName;
             //$employee->photo = 'http://jobmaster.es/img/employees/' . $originalName;
+            $employee->photo = url('assets/employees/' . $originalName);
             $employee->users_id = $userId;
 
             // Save address data
@@ -187,6 +188,7 @@ class EmployeeController extends Controller
                 $fileName = 'employee_' . $id . '.' . $extension;
                 $photo->move(public_path('img/employees'), $fileName);
                 $employee->photo = 'http://localhost:8000/img/employees/' . $fileName . '?timestamp=' . now()->timestamp;
+                // $employee->photo = 'https://jobmaster.es/img/employees/' . $fileName . '?timestamp=' . now()->timestamp;
                 $employee->save();
             }
 
